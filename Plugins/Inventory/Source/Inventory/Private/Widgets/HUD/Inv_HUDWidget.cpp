@@ -1,6 +1,5 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Widgets/HUD/Inv_HUDWidget.h"
 
 #include "InventoryManagement/Components/Inv_InventoryComponent.h"
@@ -18,8 +17,12 @@ void UInv_HUDWidget::NativeOnInitialized()
 	}
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void UInv_HUDWidget::OnNoRoom()
 {
-	if (!IsValid(InfoMessage)) return;
+	if (!IsValid(InfoMessage))
+	{
+		return;
+	}
 	InfoMessage->SetMessage(FText::FromString("No Room In Inventory."));
 }

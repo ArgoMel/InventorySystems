@@ -1,6 +1,5 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Player/Inv_PlayerController.h"
 
 #include "EnhancedInputComponent.h"
@@ -14,6 +13,7 @@
 AInv_PlayerController::AInv_PlayerController()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	
 	TraceLength = 500.0;
 	ItemTraceChannel = ECC_GameTraceChannel1;
 }
@@ -49,9 +49,13 @@ void AInv_PlayerController::Tick(float DeltaTime)
 	TraceForItem();
 }
 
+// ReSharper disable once CppUE4BlueprintCallableFunctionMayBeConst
 void AInv_PlayerController::ToggleInventory()
 {
-	if (!InventoryComponent.IsValid()) return;
+	if (!InventoryComponent.IsValid())
+	{
+		return;
+	}
 	InventoryComponent->ToggleInventoryMenu();
 
 	if (InventoryComponent->IsMenuOpen())
@@ -81,7 +85,10 @@ void AInv_PlayerController::PrimaryInteract()
 
 void AInv_PlayerController::CreateHUDWidget()
 {
-	if (!IsLocalController()) return;
+	if (!IsLocalController())
+	{
+		return;
+	}
 	HUDWidget = CreateWidget<UInv_HUDWidget>(this, HUDWidgetClass);
 	if (IsValid(HUDWidget))
 	{
@@ -91,14 +98,20 @@ void AInv_PlayerController::CreateHUDWidget()
 
 void AInv_PlayerController::TraceForItem()
 {
-	if (!IsValid(GEngine) || !IsValid(GEngine->GameViewport)) return;
+	if (!IsValid(GEngine)
+		|| !IsValid(GEngine->GameViewport))
+	{
+		return;
+	}
 	FVector2D ViewportSize;
 	GEngine->GameViewport->GetViewportSize(ViewportSize);
 	const FVector2D ViewportCenter = ViewportSize / 2.f;
 	FVector TraceStart;
 	FVector Forward;
-	if (!UGameplayStatics::DeprojectScreenToWorld(this, ViewportCenter, TraceStart, Forward)) return;
-
+	if (!UGameplayStatics::DeprojectScreenToWorld(this, ViewportCenter, TraceStart, Forward))
+	{
+		return;
+	}
 	const FVector TraceEnd = TraceStart + Forward * TraceLength;
 	FHitResult HitResult;
 	GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ItemTraceChannel);
@@ -108,27 +121,40 @@ void AInv_PlayerController::TraceForItem()
 
 	if (!ThisActor.IsValid())
 	{
-		if (IsValid(HUDWidget)) HUDWidget->HidePickupMessage();
+		if (IsValid(HUDWidget))
+		{
+			HUDWidget->HidePickupMessage();
+		}
 	}
 
-	if (ThisActor == LastActor) return;
+	if (ThisActor == LastActor)
+	{
+		return;
+	}
 
 	if (ThisActor.IsValid())
 	{
-		if (UActorComponent* Highlightable = ThisActor->FindComponentByInterface(UInv_Highlightable::StaticClass()); IsValid(Highlightable))
+		UActorComponent* Highlightable = ThisActor->FindComponentByInterface(UInv_Highlightable::StaticClass());
+		if ( IsValid(Highlightable))
 		{
 			IInv_Highlightable::Execute_Highlight(Highlightable);
 		}
-		
-		UInv_ItemComponent* ItemComponent = ThisActor->FindComponentByClass<UInv_ItemComponent>();
-		if (!IsValid(ItemComponent)) return;
 
-		if (IsValid(HUDWidget)) HUDWidget->ShowPickupMessage(ItemComponent->GetPickupMessage());
+		const UInv_ItemComponent* ItemComponent = ThisActor->FindComponentByClass<UInv_ItemComponent>();
+		if (!IsValid(ItemComponent))
+		{
+			return;
+		}
+		if (IsValid(HUDWidget))
+		{
+			HUDWidget->ShowPickupMessage(ItemComponent->GetPickupMessage());
+		}
 	}
 
 	if (LastActor.IsValid())
 	{
-		if (UActorComponent* Highlightable = LastActor->FindComponentByInterface(UInv_Highlightable::StaticClass()); IsValid(Highlightable))
+		UActorComponent* Highlightable = LastActor->FindComponentByInterface(UInv_Highlightable::StaticClass());
+		if (IsValid(Highlightable))
 		{
 			IInv_Highlightable::Execute_UnHighlight(Highlightable);
 		}
