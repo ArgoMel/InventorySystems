@@ -18,6 +18,30 @@ AInv_PlayerController::AInv_PlayerController()
 	ItemTraceChannel = ECC_GameTraceChannel1;
 }
 
+void AInv_PlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+
+	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
+
+	EnhancedInputComponent->BindAction(PrimaryInteractAction, ETriggerEvent::Started, this, &AInv_PlayerController::PrimaryInteract);
+	EnhancedInputComponent->BindAction(ToggleInventoryAction, ETriggerEvent::Started, this, &AInv_PlayerController::ToggleInventory);
+}
+
+void AInv_PlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
+	if (IsValid(Subsystem))
+	{
+		Subsystem->AddMappingContext(DefaultIMC, 0);
+	}
+
+	InventoryComponent = FindComponentByClass<UInv_InventoryComponent>();
+	CreateHUDWidget();
+}
+
 void AInv_PlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -40,37 +64,18 @@ void AInv_PlayerController::ToggleInventory()
 	}
 }
 
-void AInv_PlayerController::BeginPlay()
-{
-	Super::BeginPlay();
-
-	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-	if (IsValid(Subsystem))
-	{
-		Subsystem->AddMappingContext(DefaultIMC, 0);
-	}
-
-	InventoryComponent = FindComponentByClass<UInv_InventoryComponent>();
-	CreateHUDWidget();
-}
-
-void AInv_PlayerController::SetupInputComponent()
-{
-	Super::SetupInputComponent();
-
-	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
-
-	EnhancedInputComponent->BindAction(PrimaryInteractAction, ETriggerEvent::Started, this, &AInv_PlayerController::PrimaryInteract);
-	EnhancedInputComponent->BindAction(ToggleInventoryAction, ETriggerEvent::Started, this, &AInv_PlayerController::ToggleInventory);
-}
-
+// ReSharper disable once CppMemberFunctionMayBeConst
 void AInv_PlayerController::PrimaryInteract()
 {
-	if (!ThisActor.IsValid()) return;
-
+	if (!ThisActor.IsValid())
+	{
+		return;
+	}
 	UInv_ItemComponent* ItemComp = ThisActor->FindComponentByClass<UInv_ItemComponent>();
-	if (!IsValid(ItemComp) || !InventoryComponent.IsValid()) return;
-
+	if (!IsValid(ItemComp) || !InventoryComponent.IsValid())
+	{
+		return;
+	}
 	InventoryComponent->TryAddItem(ItemComp);
 }
 

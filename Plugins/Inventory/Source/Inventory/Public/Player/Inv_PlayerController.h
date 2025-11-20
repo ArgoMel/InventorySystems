@@ -17,20 +17,22 @@ class INVENTORY_API AInv_PlayerController : public APlayerController
 	GENERATED_BODY()
 public:
 	AInv_PlayerController();
+
+protected:
+	virtual void SetupInputComponent() override;
+	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
+public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void ToggleInventory();
 	
-protected:
-	virtual void BeginPlay() override;
-	virtual void SetupInputComponent() override;
-
 private:
 	void PrimaryInteract();
 	void CreateHUDWidget();
 	void TraceForItem();
 
+private:
 	TWeakObjectPtr<UInv_InventoryComponent> InventoryComponent;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
