@@ -1,6 +1,5 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "InventoryManagement/Components/Inv_InventoryComponent.h"
 
 #include "Items/Components/Inv_ItemComponent.h"
@@ -8,7 +7,6 @@
 #include "Net/UnrealNetwork.h"
 #include "Items/Inv_InventoryItem.h"
 #include "Items/Fragments/Inv_ItemFragment.h"
-
 
 UInv_InventoryComponent::UInv_InventoryComponent() : InventoryList(this)
 {
@@ -23,6 +21,13 @@ void UInv_InventoryComponent::GetLifetimeReplicatedProps(TArray<FLifetimePropert
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(ThisClass, InventoryList);
+}
+
+void UInv_InventoryComponent::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	ConstructInventory();
 }
 
 void UInv_InventoryComponent::TryAddItem(UInv_ItemComponent* ItemComponent)
@@ -105,7 +110,7 @@ void UInv_InventoryComponent::Server_DropItem_Implementation(UInv_InventoryItem*
 	SpawnDroppedItem(Item, StackCount);
 }
 
-void UInv_InventoryComponent::SpawnDroppedItem(UInv_InventoryItem* Item, int32 StackCount)
+void UInv_InventoryComponent::SpawnDroppedItem(UInv_InventoryItem* Item, int32 StackCount) const
 {
 	const APawn* OwningPawn = OwningController->GetPawn();
 	FVector RotatedForward = OwningPawn->GetActorForwardVector();
@@ -173,19 +178,14 @@ void UInv_InventoryComponent::AddRepSubObj(UObject* SubObj)
 	}
 }
 
-void UInv_InventoryComponent::BeginPlay()
-{
-	Super::BeginPlay();
-	
-	ConstructInventory();
-}
-
 void UInv_InventoryComponent::ConstructInventory()
 {
 	OwningController = Cast<APlayerController>(GetOwner());
 	checkf(OwningController.IsValid(), TEXT("Inventory Component should have a Player Controller as Owner."))
-	if (!OwningController->IsLocalController()) return;
-
+	if (!OwningController->IsLocalController())
+	{
+		return;
+	}
 	InventoryMenu = CreateWidget<UInv_InventoryBase>(OwningController.Get(), InventoryMenuClass);
 	InventoryMenu->AddToViewport();
 	CloseInventoryMenu();
@@ -193,28 +193,36 @@ void UInv_InventoryComponent::ConstructInventory()
 
 void UInv_InventoryComponent::OpenInventoryMenu()
 {
-	if (!IsValid(InventoryMenu)) return;
-
+	if (!IsValid(InventoryMenu))
+	{
+		return;
+	}
 	InventoryMenu->SetVisibility(ESlateVisibility::Visible);
 	bInventoryMenuOpen = true;
 
-	if (!OwningController.IsValid()) return;
-
-	FInputModeGameAndUI InputMode;
+	if (!OwningController.IsValid())
+	{
+		return;
+	}
+	const FInputModeGameAndUI InputMode;
 	OwningController->SetInputMode(InputMode);
 	OwningController->SetShowMouseCursor(true);
 }
 
 void UInv_InventoryComponent::CloseInventoryMenu()
 {
-	if (!IsValid(InventoryMenu)) return;
-
+	if (!IsValid(InventoryMenu))
+	{
+		return;
+	}
 	InventoryMenu->SetVisibility(ESlateVisibility::Collapsed);
 	bInventoryMenuOpen = false;
 
-	if (!OwningController.IsValid()) return;
-
-	FInputModeGameOnly InputMode;
+	if (!OwningController.IsValid())
+	{
+		return;
+	}
+	const FInputModeGameOnly InputMode;
 	OwningController->SetInputMode(InputMode);
 	OwningController->SetShowMouseCursor(false);
 }

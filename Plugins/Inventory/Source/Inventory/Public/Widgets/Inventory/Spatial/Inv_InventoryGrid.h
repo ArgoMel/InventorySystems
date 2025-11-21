@@ -20,17 +20,16 @@ class UInv_GridSlot;
 class UInv_InventoryComponent;
 struct FGameplayTag;
 enum class EInv_GridSlotState : uint8;
-/**
- * 
- */
-UCLASS()
+
+UCLASS(Abstract)
 class INVENTORY_API UInv_InventoryGrid : public UUserWidget
 {
 	GENERATED_BODY()
-public:
+protected:
 	virtual void NativeOnInitialized() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
-
+	
+public:
 	EInv_ItemCategory GetItemCategory() const { return ItemCategory; }
 	FInv_SlotAvailabilityResult HasRoomForItem(const UInv_ItemComponent* ItemComponent);
 	void ShowCursor();
@@ -46,13 +45,9 @@ public:
 
 	UFUNCTION()
 	void AddItem(UInv_InventoryItem* Item);
-
+	
 private:
-
-	TWeakObjectPtr<UInv_InventoryComponent> InventoryComponent;
-	TWeakObjectPtr<UCanvasPanel> OwningCanvasPanel;
-
-	void ConstructGrid();
+		void ConstructGrid();
 	FInv_SlotAvailabilityResult HasRoomForItem(const UInv_InventoryItem* Item, const int32 StackAmountOverride = -1);
 	FInv_SlotAvailabilityResult HasRoomForItem(const FInv_ItemManifest& Manifest, const int32 StackAmountOverride = -1);
 	void AddItemToIndices(const FInv_SlotAvailabilityResult& Result, UInv_InventoryItem* NewItem);
@@ -117,24 +112,6 @@ private:
 	void CreateItemPopUp(const int32 GridIndex);
 	void PutHoverItemBack();
 
-	UPROPERTY(EditAnywhere, Category = "Inventory")
-	TSubclassOf<UInv_ItemPopUp> ItemPopUpClass;
-
-	UPROPERTY()
-	TObjectPtr<UInv_ItemPopUp> ItemPopUp;
-
-	UPROPERTY(EditAnywhere, Category = "Inventory")
-	TSubclassOf<UUserWidget> VisibleCursorWidgetClass;
-
-	UPROPERTY(EditAnywhere, Category = "Inventory")
-	TSubclassOf<UUserWidget> HiddenCursorWidgetClass;
-
-	UPROPERTY()
-	TObjectPtr<UUserWidget> VisibleCursorWidget;
-
-	UPROPERTY()
-	TObjectPtr<UUserWidget> HiddenCursorWidget;
-	
 	UFUNCTION()
 	void AddStacks(const FInv_SlotAvailabilityResult& Result);
 
@@ -161,6 +138,28 @@ private:
 
 	UFUNCTION()
 	void OnInventoryMenuToggled(bool bOpen);
+	
+private:
+	TWeakObjectPtr<UInv_InventoryComponent> InventoryComponent;
+	TWeakObjectPtr<UCanvasPanel> OwningCanvasPanel;
+	
+	UPROPERTY(EditAnywhere, Category = "Inventory")
+	TSubclassOf<UInv_ItemPopUp> ItemPopUpClass;
+
+	UPROPERTY()
+	TObjectPtr<UInv_ItemPopUp> ItemPopUp;
+
+	UPROPERTY(EditAnywhere, Category = "Inventory")
+	TSubclassOf<UUserWidget> VisibleCursorWidgetClass;
+
+	UPROPERTY(EditAnywhere, Category = "Inventory")
+	TSubclassOf<UUserWidget> HiddenCursorWidgetClass;
+
+	UPROPERTY()
+	TObjectPtr<UUserWidget> VisibleCursorWidget;
+
+	UPROPERTY()
+	TObjectPtr<UUserWidget> HiddenCursorWidget;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"),  Category = "Inventory")
 	EInv_ItemCategory ItemCategory;

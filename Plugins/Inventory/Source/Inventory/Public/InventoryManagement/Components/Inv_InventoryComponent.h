@@ -21,11 +21,14 @@ UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Blueprintable)
 class INVENTORY_API UInv_InventoryComponent : public UActorComponent
 {
 	GENERATED_BODY()
-
 public:
 	UInv_InventoryComponent();
+	
+protected:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
+	virtual void BeginPlay() override;
+	
+public:
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Inventory")
 	void TryAddItem(UInv_ItemComponent* ItemComponent);
 
@@ -49,10 +52,16 @@ public:
 
 	void ToggleInventoryMenu();
 	void AddRepSubObj(UObject* SubObj);
-	void SpawnDroppedItem(UInv_InventoryItem* Item, int32 StackCount);
+	void SpawnDroppedItem(UInv_InventoryItem* Item, int32 StackCount) const;
 	UInv_InventoryBase* GetInventoryMenu() const { return InventoryMenu; }
 	bool IsMenuOpen() const { return bInventoryMenuOpen; }
 
+private:
+	void ConstructInventory();
+	void OpenInventoryMenu();
+	void CloseInventoryMenu();
+	
+public:
 	FInventoryItemChange OnItemAdded;
 	FInventoryItemChange OnItemRemoved;
 	FNoRoomInInventory NoRoomInInventory;
@@ -60,15 +69,10 @@ public:
 	FItemEquipStatusChanged OnItemEquipped;
 	FItemEquipStatusChanged OnItemUnequipped;
 	FInventoryMenuToggled OnInventoryMenuToggled;
-protected:
-	virtual void BeginPlay() override;
 
 private:
-
 	TWeakObjectPtr<APlayerController> OwningController;
 	
-	void ConstructInventory();
-
 	UPROPERTY(Replicated)
 	FInv_InventoryFastArray InventoryList;
 
@@ -79,8 +83,6 @@ private:
 	TSubclassOf<UInv_InventoryBase> InventoryMenuClass;
 
 	bool bInventoryMenuOpen;
-	void OpenInventoryMenu();
-	void CloseInventoryMenu();
 
 	UPROPERTY(EditAnywhere, Category = "Inventory")
 	float DropSpawnAngleMin = -85.f;

@@ -1,6 +1,5 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Widgets/Inventory/Spatial/Inv_SpatialInventory.h"
 
 #include "Inventory.h"
@@ -25,15 +24,15 @@ void UInv_SpatialInventory::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	Button_Equippables->OnClicked.AddDynamic(this, &ThisClass::ShowEquippables);
+	Button_Equippable->OnClicked.AddDynamic(this, &ThisClass::ShowEquippable);
 	Button_Consumables->OnClicked.AddDynamic(this, &ThisClass::ShowConsumables);
 	Button_Craftables->OnClicked.AddDynamic(this, &ThisClass::ShowCraftables);
 
-	Grid_Equippables->SetOwningCanvas(CanvasPanel);
+	Grid_Equippable->SetOwningCanvas(CanvasPanel);
 	Grid_Consumables->SetOwningCanvas(CanvasPanel);
 	Grid_Craftables->SetOwningCanvas(CanvasPanel);
 
-	ShowEquippables();
+	ShowEquippable();
 
 	WidgetTree->ForEachWidget([this](UWidget* Widget)
 	{
@@ -69,7 +68,7 @@ void UInv_SpatialInventory::EquippedGridSlotClicked(UInv_EquippedGridSlot* Equip
 	InventoryComponent->Server_EquipSlotClicked(HoverItem->GetInventoryItem(), nullptr);
 	
 	// Clear the Hover Item
-	Grid_Equippables->ClearHoverItem();
+	Grid_Equippable->ClearHoverItem();
 }
 
 void UInv_SpatialInventory::EquippedSlottedItemClicked(UInv_EquippedSlottedItem* EquippedSlottedItem)
@@ -92,7 +91,7 @@ void UInv_SpatialInventory::EquippedSlottedItemClicked(UInv_EquippedSlottedItem*
 	ClearSlotOfItem(EquippedGridSlot);
 
 	// Assign previously equipped item as the hover item
-	Grid_Equippables->AssignHoverItem(ItemToUnequip);
+	Grid_Equippable->AssignHoverItem(ItemToUnequip);
 	
 	// Remove of the equipped slotted item from the equipped grid slot
 	RemoveEquippedSlottedItem(EquippedSlottedItem);
@@ -178,7 +177,7 @@ UInv_EquippedGridSlot* UInv_SpatialInventory::FindSlotWithEquippedItem(UInv_Inve
 	return FoundEquippedGridSlot ? *FoundEquippedGridSlot : nullptr;
 }
 
-void UInv_SpatialInventory::ClearSlotOfItem(UInv_EquippedGridSlot* EquippedGridSlot)
+void UInv_SpatialInventory::ClearSlotOfItem(UInv_EquippedGridSlot* EquippedGridSlot) const
 {
 	if (IsValid(EquippedGridSlot))
 	{
@@ -223,7 +222,7 @@ FInv_SlotAvailabilityResult UInv_SpatialInventory::HasRoomForItem(UInv_ItemCompo
 	switch (UInv_InventoryStatics::GetItemCategoryFromItemComp(ItemComponent))
 	{
 		case EInv_ItemCategory::Equippable:
-			return Grid_Equippables->HasRoomForItem(ItemComponent);
+			return Grid_Equippable->HasRoomForItem(ItemComponent);
 		case EInv_ItemCategory::Consumable:
 			return Grid_Consumables->HasRoomForItem(ItemComponent);
 		case EInv_ItemCategory::Craftable:
@@ -268,7 +267,7 @@ void UInv_SpatialInventory::OnItemUnHovered()
 
 bool UInv_SpatialInventory::HasHoverItem() const
 {
-	if (Grid_Equippables->HasHoverItem()) return true;
+	if (Grid_Equippable->HasHoverItem()) return true;
 	if (Grid_Consumables->HasHoverItem()) return true;
 	if (Grid_Craftables->HasHoverItem()) return true;
 	return false;
@@ -282,7 +281,7 @@ UInv_HoverItem* UInv_SpatialInventory::GetHoverItem() const
 
 float UInv_SpatialInventory::GetTileSize() const
 {
-	return Grid_Equippables->GetTileSize();
+	return Grid_Equippable->GetTileSize();
 }
 
 void UInv_SpatialInventory::ShowEquippedItemDescription(UInv_InventoryItem* Item)
@@ -341,9 +340,9 @@ UInv_ItemDescription* UInv_SpatialInventory::GetEquippedItemDescription()
 	return EquippedItemDescription;
 }
 
-void UInv_SpatialInventory::ShowEquippables()
+void UInv_SpatialInventory::ShowEquippable()
 {
-	SetActiveGrid(Grid_Equippables, Button_Equippables);
+	SetActiveGrid(Grid_Equippable, Button_Equippable);
 }
 
 void UInv_SpatialInventory::ShowConsumables()
@@ -356,9 +355,9 @@ void UInv_SpatialInventory::ShowCraftables()
 	SetActiveGrid(Grid_Craftables, Button_Craftables);
 }
 
-void UInv_SpatialInventory::DisableButton(UButton* Button)
+void UInv_SpatialInventory::DisableButton(UButton* Button) const
 {
-	Button_Equippables->SetIsEnabled(true);
+	Button_Equippable->SetIsEnabled(true);
 	Button_Consumables->SetIsEnabled(true);
 	Button_Craftables->SetIsEnabled(true);
 	Button->SetIsEnabled(false);
@@ -372,7 +371,10 @@ void UInv_SpatialInventory::SetActiveGrid(UInv_InventoryGrid* Grid, UButton* But
 		ActiveGrid->OnHide();
 	}
 	ActiveGrid = Grid;
-	if (ActiveGrid.IsValid()) ActiveGrid->ShowCursor();
+	if (ActiveGrid.IsValid())
+	{
+		ActiveGrid->ShowCursor();
+	}
 	DisableButton(Button);
 	Switcher->SetActiveWidget(Grid);
 }

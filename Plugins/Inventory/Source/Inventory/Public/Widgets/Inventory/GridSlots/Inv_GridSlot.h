@@ -21,15 +21,16 @@ enum class EInv_GridSlotState : uint8
 	GrayedOut
 };
 
-UCLASS()
+UCLASS(Abstract)
 class INVENTORY_API UInv_GridSlot : public UUserWidget
 {
 	GENERATED_BODY()
-public:
+protected:
 	virtual void NativeOnMouseEnter(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
 	virtual void NativeOnMouseLeave(const FPointerEvent& MouseEvent) override;
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
 	
+public:
 	void SetTileIndex(int32 Index) { TileIndex = Index; }
 	int32 GetTileIndex() const { return TileIndex; }
 	EInv_GridSlotState GetGridSlotState() const { return GridSlotState; }
@@ -51,9 +52,15 @@ public:
 	void SetSelectedTexture();
 	void SetGrayedOutTexture();
 
+private:
+	UFUNCTION()
+	void OnItemPopUpDestruct(UUserWidget* Menu);
+
+public:
 	FGridSlotEvent GridSlotClicked;
 	FGridSlotEvent GridSlotHovered;
 	FGridSlotEvent GridSlotUnhovered;
+	
 private:
 	int32 StackCount{0};
 	bool bAvailable{true};
@@ -78,8 +85,4 @@ private:
 	FSlateBrush Brush_GrayedOut;
 
 	EInv_GridSlotState GridSlotState;
-
-	UFUNCTION()
-	void OnItemPopUpDestruct(UUserWidget* Menu);
-	
 };

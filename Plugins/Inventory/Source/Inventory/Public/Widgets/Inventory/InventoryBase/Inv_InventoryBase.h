@@ -11,7 +11,7 @@ class UInv_ItemComponent;
 class UInv_InventoryItem;
 class UInv_HoverItem;
 
-UCLASS()
+UCLASS(Abstract)
 class INVENTORY_API UInv_InventoryBase : public UUserWidget
 {
 	GENERATED_BODY()

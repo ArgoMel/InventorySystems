@@ -115,6 +115,7 @@ void AInv_PlayerController::TraceForItem()
 	const FVector TraceEnd = TraceStart + Forward * TraceLength;
 	FHitResult HitResult;
 	GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ItemTraceChannel);
+	//DrawDebugLine(GetWorld(),TraceStart, TraceEnd, FColor::Red);
 
 	LastActor = ThisActor;
 	ThisActor = HitResult.GetActor();
