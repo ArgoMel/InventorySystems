@@ -15,7 +15,7 @@ USTRUCT(BlueprintType)
 struct FInv_InventoryEntry : public FFastArraySerializerItem
 {
 	GENERATED_BODY()
-
+public:
 	FInv_InventoryEntry() {}
 
 private:
@@ -31,9 +31,9 @@ USTRUCT(BlueprintType)
 struct FInv_InventoryFastArray : public FFastArraySerializer
 {
 	GENERATED_BODY()
-
+public:
 	FInv_InventoryFastArray() : OwnerComponent(nullptr) {}
-	FInv_InventoryFastArray(UActorComponent* InOwnerComponent) : OwnerComponent(InOwnerComponent) {}
+	explicit FInv_InventoryFastArray(UActorComponent* InOwnerComponent) : OwnerComponent(InOwnerComponent) {}
 
 	TArray<UInv_InventoryItem*> GetAllItems() const;
 

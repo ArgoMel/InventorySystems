@@ -655,9 +655,11 @@ UInv_HoverItem* UInv_InventoryGrid::GetHoverItem() const
 
 void UInv_InventoryGrid::AddItem(UInv_InventoryItem* Item)
 {
-	if (!MatchesCategory(Item)) return;
-
-	FInv_SlotAvailabilityResult Result = HasRoomForItem(Item);
+	if (!MatchesCategory(Item))
+	{
+		return;
+	}
+	const FInv_SlotAvailabilityResult Result = HasRoomForItem(Item);
 	AddItemToIndices(Result, Item);	
 }
 
@@ -751,9 +753,9 @@ void UInv_InventoryGrid::ConstructGrid()
 {
 	GridSlots.Reserve(Rows * Columns);
 
-	for (int32 j = 0; j < Rows; j++)
+	for (int32 j = 0; j < Rows; ++j)
 	{
-		for (int32 i = 0; i < Columns; i++)
+		for (int32 i = 0; i < Columns; ++i)
 		{
 			UInv_GridSlot* GridSlot = CreateWidget<UInv_GridSlot>(this, GridSlotClass);
 			CanvasPanel->AddChild(GridSlot);

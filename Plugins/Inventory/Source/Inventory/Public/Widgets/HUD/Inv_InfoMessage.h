@@ -7,13 +7,14 @@
 #include "Inv_InfoMessage.generated.h"
 
 class UTextBlock;
-UCLASS()
+UCLASS(Abstract)
 class INVENTORY_API UInv_InfoMessage : public UUserWidget
 {
 	GENERATED_BODY()
-public:
+protected:
 	virtual void NativeOnInitialized() override;
-
+	
+public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Inventory")
 	void MessageShow();
 
@@ -23,7 +24,6 @@ public:
 	void SetMessage(const FText& Message);
 
 private:
-
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UTextBlock> Text_Message;
 

@@ -8,7 +8,8 @@
 #include "Items/Inv_InventoryItem.h"
 #include "Items/Fragments/Inv_ItemFragment.h"
 
-UInv_InventoryComponent::UInv_InventoryComponent() : InventoryList(this)
+UInv_InventoryComponent::UInv_InventoryComponent()
+	: InventoryList(this)
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	SetIsReplicatedByDefault(true);
@@ -62,7 +63,8 @@ void UInv_InventoryComponent::Server_AddNewItem_Implementation(UInv_ItemComponen
 	UInv_InventoryItem* NewItem = InventoryList.AddEntry(ItemComponent);
 	NewItem->SetTotalStackCount(StackCount);
 
-	if (GetOwner()->GetNetMode() == NM_ListenServer || GetOwner()->GetNetMode() == NM_Standalone)
+	if (GetOwner()->GetNetMode() == NM_ListenServer
+		|| GetOwner()->GetNetMode() == NM_Standalone)
 	{
 		OnItemAdded.Broadcast(NewItem);
 	}
@@ -81,8 +83,10 @@ void UInv_InventoryComponent::Server_AddStacksToItem_Implementation(UInv_ItemCom
 {
 	const FGameplayTag& ItemType = IsValid(ItemComponent) ? ItemComponent->GetItemManifest().GetItemType() : FGameplayTag::EmptyTag;
 	UInv_InventoryItem* Item = InventoryList.FindFirstItemByType(ItemType);
-	if (!IsValid(Item)) return;
-
+	if (!IsValid(Item))
+	{
+		return;
+	}
 	Item->SetTotalStackCount(Item->GetTotalStackCount() + StackCount);
 
 	if (Remainder == 0)

@@ -11,7 +11,10 @@ TArray<UInv_InventoryItem*> FInv_InventoryFastArray::GetAllItems() const
 	Results.Reserve(Entries.Num());
 	for (const auto& Entry : Entries)
 	{
-		if (!IsValid(Entry.Item)) continue;
+		if (!IsValid(Entry.Item))
+		{
+			continue;
+		}
 		Results.Add(Entry.Item);
 	}
 	return Results;
@@ -19,10 +22,12 @@ TArray<UInv_InventoryItem*> FInv_InventoryFastArray::GetAllItems() const
 
 void FInv_InventoryFastArray::PreReplicatedRemove(const TArrayView<int32> RemovedIndices, int32 FinalSize)
 {
-	UInv_InventoryComponent* IC = Cast<UInv_InventoryComponent>(OwnerComponent);
-	if (!IsValid(IC)) return;
-
-	for (int32 Index : RemovedIndices)
+	const UInv_InventoryComponent* IC = Cast<UInv_InventoryComponent>(OwnerComponent);
+	if (!IsValid(IC))
+	{
+		return;
+	}
+	for (const int32 Index : RemovedIndices)
 	{
 		IC->OnItemRemoved.Broadcast(Entries[Index].Item);
 	}
@@ -30,10 +35,12 @@ void FInv_InventoryFastArray::PreReplicatedRemove(const TArrayView<int32> Remove
 
 void FInv_InventoryFastArray::PostReplicatedAdd(const TArrayView<int32> AddedIndices, int32 FinalSize)
 {
-	UInv_InventoryComponent* IC = Cast<UInv_InventoryComponent>(OwnerComponent);
-	if (!IsValid(IC)) return;
-    	
-	for (int32 Index : AddedIndices)
+	const UInv_InventoryComponent* IC = Cast<UInv_InventoryComponent>(OwnerComponent);
+	if (!IsValid(IC))
+	{
+		return;
+	}	
+	for (const int32 Index : AddedIndices)
 	{
 		IC->OnItemAdded.Broadcast(Entries[Index].Item);
 	}
@@ -45,8 +52,10 @@ UInv_InventoryItem* FInv_InventoryFastArray::AddEntry(UInv_ItemComponent* ItemCo
 	AActor* OwningActor = OwnerComponent->GetOwner();
 	check(OwningActor->HasAuthority());
 	UInv_InventoryComponent* IC = Cast<UInv_InventoryComponent>(OwnerComponent);
-	if (!IsValid(IC)) return nullptr;
-
+	if (!IsValid(IC))
+	{
+		return nullptr;
+	}
 	FInv_InventoryEntry& NewEntry = Entries.AddDefaulted_GetRef();
 	NewEntry.Item = ItemComponent->GetItemManifest().Manifest(OwningActor);
 
@@ -59,7 +68,7 @@ UInv_InventoryItem* FInv_InventoryFastArray::AddEntry(UInv_ItemComponent* ItemCo
 UInv_InventoryItem* FInv_InventoryFastArray::AddEntry(UInv_InventoryItem* Item)
 {
 	check(OwnerComponent);
-	AActor* OwningActor = OwnerComponent->GetOwner();
+	const AActor* OwningActor = OwnerComponent->GetOwner();
 	check(OwningActor->HasAuthority());
 
 	FInv_InventoryEntry& NewEntry = Entries.AddDefaulted_GetRef();

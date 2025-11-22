@@ -7,20 +7,19 @@
 
 #include "Inv_ItemManifest.generated.h"
 
-/**
- * The Item Manifest contains all of the necessary data
- * for creating a new Inventory Item
- */
-
 class UInv_InventoryItem;
 struct FInv_ItemFragment;
 class UInv_CompositeBase;
 
+/**
+ * The Item Manifest contains all the necessary data
+ * for creating a new Inventory Item
+ */
 USTRUCT(BlueprintType)
 struct INVENTORY_API FInv_ItemManifest
 {
 	GENERATED_BODY()
-
+public:
 	TArray<TInstancedStruct<FInv_ItemFragment>>& GetFragmentsMutable() { return Fragments; }
 	UInv_InventoryItem* Manifest(UObject* NewOuter);
 	EInv_ItemCategory GetItemCategory() const { return ItemCategory; }
@@ -39,10 +38,12 @@ struct INVENTORY_API FInv_ItemManifest
 	template<typename T> requires std::derived_from<T, FInv_ItemFragment>
 	TArray<const T*> GetAllFragmentsOfType() const;
 
-	void SpawnPickupActor(const UObject* WorldContextObject, const FVector& SpawnLocation, const FRotator& SpawnRotation);
+	void SpawnPickupActor(const UObject* WorldContextObject, const FVector& SpawnLocation, const FRotator& SpawnRotation) const;
 
 private:
+	void ClearFragments();
 
+private:
 	UPROPERTY(EditAnywhere, Category = "Inventory", meta = (ExcludeBaseStruct))
 	TArray<TInstancedStruct<FInv_ItemFragment>> Fragments;
 
@@ -54,8 +55,6 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Inventory")
 	TSubclassOf<AActor> PickupActorClass;
-
-	void ClearFragments();
 };
 
 

@@ -45,6 +45,88 @@ void UInv_SpatialInventory::NativeOnInitialized()
 	});
 }
 
+FReply UInv_SpatialInventory::NativeOnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)
+{
+	ActiveGrid->DropItem();
+	return FReply::Handled();
+}
+
+void UInv_SpatialInventory::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+
+	if (!IsValid(ItemDescription)) return;
+	SetItemDescriptionSizeAndPosition(ItemDescription, CanvasPanel);
+	SetEquippedItemDescriptionSizeAndPosition(ItemDescription, EquippedItemDescription, CanvasPanel);
+}
+
+FInv_SlotAvailabilityResult UInv_SpatialInventory::HasRoomForItem(UInv_ItemComponent* ItemComponent) const
+{
+	switch (UInv_InventoryStatics::GetItemCategoryFromItemComp(ItemComponent))
+	{
+		case EInv_ItemCategory::Equippable:
+			return Grid_Equippable->HasRoomForItem(ItemComponent);
+		case EInv_ItemCategory::Consumable:
+			return Grid_Consumables->HasRoomForItem(ItemComponent);
+		case EInv_ItemCategory::Craftable:
+			return Grid_Craftables->HasRoomForItem(ItemComponent);
+		default:
+			UE_LOG(LogInventory, Error, TEXT("ItemComponent doesn't have a valid Item Category."))
+			return FInv_SlotAvailabilityResult();
+	}
+}
+
+void UInv_SpatialInventory::OnItemHovered(UInv_InventoryItem* Item)
+{
+	const auto& Manifest = Item->GetItemManifest();
+	UInv_ItemDescription* DescriptionWidget = GetItemDescription();
+	DescriptionWidget->SetVisibility(ESlateVisibility::Collapsed);
+
+	GetOwningPlayer()->GetWorldTimerManager().ClearTimer(DescriptionTimer);
+	GetOwningPlayer()->GetWorldTimerManager().ClearTimer(EquippedDescriptionTimer);
+
+	FTimerDelegate DescriptionTimerDelegate;
+	DescriptionTimerDelegate.BindLambda([this, Item, &Manifest, DescriptionWidget]()
+	{
+		GetItemDescription()->SetVisibility(ESlateVisibility::HitTestInvisible);
+		Manifest.AssimilateInventoryFragments(DescriptionWidget);
+		
+		// For the second item description, showing the equipped item of this type.
+		FTimerDelegate EquippedDescriptionTimerDelegate;
+		EquippedDescriptionTimerDelegate.BindUObject(this, &ThisClass::ShowEquippedItemDescription, Item);
+		GetOwningPlayer()->GetWorldTimerManager().SetTimer(EquippedDescriptionTimer, EquippedDescriptionTimerDelegate, EquippedDescriptionTimerDelay, false);
+	});
+
+	GetOwningPlayer()->GetWorldTimerManager().SetTimer(DescriptionTimer, DescriptionTimerDelegate, DescriptionTimerDelay, false);
+}
+
+void UInv_SpatialInventory::OnItemUnHovered()
+{
+	GetItemDescription()->SetVisibility(ESlateVisibility::Collapsed);
+	GetOwningPlayer()->GetWorldTimerManager().ClearTimer(DescriptionTimer);
+	GetEquippedItemDescription()->SetVisibility(ESlateVisibility::Collapsed);
+	GetOwningPlayer()->GetWorldTimerManager().ClearTimer(EquippedDescriptionTimer);
+}
+
+bool UInv_SpatialInventory::HasHoverItem() const
+{
+	if (Grid_Equippable->HasHoverItem()) return true;
+	if (Grid_Consumables->HasHoverItem()) return true;
+	if (Grid_Craftables->HasHoverItem()) return true;
+	return false;
+}
+
+UInv_HoverItem* UInv_SpatialInventory::GetHoverItem() const
+{
+	if (!ActiveGrid.IsValid()) return nullptr;
+	return ActiveGrid->GetHoverItem();
+}
+
+float UInv_SpatialInventory::GetTileSize() const
+{
+	return Grid_Equippable->GetTileSize();
+}
+
 void UInv_SpatialInventory::EquippedGridSlotClicked(UInv_EquippedGridSlot* EquippedGridSlot, const FGameplayTag& EquipmentTypeTag)
 {
 	// Check to see if we can equip the Hover Item
@@ -101,21 +183,6 @@ void UInv_SpatialInventory::EquippedSlottedItemClicked(UInv_EquippedSlottedItem*
 	
 	// Broadcast delegates for OnItemEquipped/OnItemUnequipped (from the IC)
 	BroadcastSlotClickedDelegates(ItemToEquip, ItemToUnequip);
-}
-
-FReply UInv_SpatialInventory::NativeOnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)
-{
-	ActiveGrid->DropItem();
-	return FReply::Handled();
-}
-
-void UInv_SpatialInventory::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
-{
-	Super::NativeTick(MyGeometry, InDeltaTime);
-
-	if (!IsValid(ItemDescription)) return;
-	SetItemDescriptionSizeAndPosition(ItemDescription, CanvasPanel);
-	SetEquippedItemDescriptionSizeAndPosition(ItemDescription, EquippedItemDescription, CanvasPanel);
 }
 
 void UInv_SpatialInventory::SetItemDescriptionSizeAndPosition(UInv_ItemDescription* Description, UCanvasPanel* Canvas) const
@@ -215,73 +282,6 @@ void UInv_SpatialInventory::BroadcastSlotClickedDelegates(UInv_InventoryItem* It
 	UInv_InventoryComponent* InventoryComponent = UInv_InventoryStatics::GetInventoryComponent(GetOwningPlayer());
 	check(IsValid(InventoryComponent));
 	InventoryComponent->Server_EquipSlotClicked(ItemToEquip, ItemToUnequip);
-}
-
-FInv_SlotAvailabilityResult UInv_SpatialInventory::HasRoomForItem(UInv_ItemComponent* ItemComponent) const
-{
-	switch (UInv_InventoryStatics::GetItemCategoryFromItemComp(ItemComponent))
-	{
-		case EInv_ItemCategory::Equippable:
-			return Grid_Equippable->HasRoomForItem(ItemComponent);
-		case EInv_ItemCategory::Consumable:
-			return Grid_Consumables->HasRoomForItem(ItemComponent);
-		case EInv_ItemCategory::Craftable:
-			return Grid_Craftables->HasRoomForItem(ItemComponent);
-		default:
-			UE_LOG(LogInventory, Error, TEXT("ItemComponent doesn't have a valid Item Category."))
-			return FInv_SlotAvailabilityResult();
-	}
-}
-
-void UInv_SpatialInventory::OnItemHovered(UInv_InventoryItem* Item)
-{
-	const auto& Manifest = Item->GetItemManifest();
-	UInv_ItemDescription* DescriptionWidget = GetItemDescription();
-	DescriptionWidget->SetVisibility(ESlateVisibility::Collapsed);
-
-	GetOwningPlayer()->GetWorldTimerManager().ClearTimer(DescriptionTimer);
-	GetOwningPlayer()->GetWorldTimerManager().ClearTimer(EquippedDescriptionTimer);
-
-	FTimerDelegate DescriptionTimerDelegate;
-	DescriptionTimerDelegate.BindLambda([this, Item, &Manifest, DescriptionWidget]()
-	{
-		GetItemDescription()->SetVisibility(ESlateVisibility::HitTestInvisible);
-		Manifest.AssimilateInventoryFragments(DescriptionWidget);
-		
-		// For the second item description, showing the equipped item of this type.
-		FTimerDelegate EquippedDescriptionTimerDelegate;
-		EquippedDescriptionTimerDelegate.BindUObject(this, &ThisClass::ShowEquippedItemDescription, Item);
-		GetOwningPlayer()->GetWorldTimerManager().SetTimer(EquippedDescriptionTimer, EquippedDescriptionTimerDelegate, EquippedDescriptionTimerDelay, false);
-	});
-
-	GetOwningPlayer()->GetWorldTimerManager().SetTimer(DescriptionTimer, DescriptionTimerDelegate, DescriptionTimerDelay, false);
-}
-
-void UInv_SpatialInventory::OnItemUnHovered()
-{
-	GetItemDescription()->SetVisibility(ESlateVisibility::Collapsed);
-	GetOwningPlayer()->GetWorldTimerManager().ClearTimer(DescriptionTimer);
-	GetEquippedItemDescription()->SetVisibility(ESlateVisibility::Collapsed);
-	GetOwningPlayer()->GetWorldTimerManager().ClearTimer(EquippedDescriptionTimer);
-}
-
-bool UInv_SpatialInventory::HasHoverItem() const
-{
-	if (Grid_Equippable->HasHoverItem()) return true;
-	if (Grid_Consumables->HasHoverItem()) return true;
-	if (Grid_Craftables->HasHoverItem()) return true;
-	return false;
-}
-
-UInv_HoverItem* UInv_SpatialInventory::GetHoverItem() const
-{
-	if (!ActiveGrid.IsValid()) return nullptr;
-	return ActiveGrid->GetHoverItem();
-}
-
-float UInv_SpatialInventory::GetTileSize() const
-{
-	return Grid_Equippable->GetTileSize();
 }
 
 void UInv_SpatialInventory::ShowEquippedItemDescription(UInv_InventoryItem* Item)

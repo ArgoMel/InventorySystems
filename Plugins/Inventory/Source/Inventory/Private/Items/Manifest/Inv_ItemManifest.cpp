@@ -31,7 +31,7 @@ void FInv_ItemManifest::AssimilateInventoryFragments(UInv_CompositeBase* Composi
 	}
 }
 
-void FInv_ItemManifest::SpawnPickupActor(const UObject* WorldContextObject, const FVector& SpawnLocation, const FRotator& SpawnRotation)
+void FInv_ItemManifest::SpawnPickupActor(const UObject* WorldContextObject, const FVector& SpawnLocation, const FRotator& SpawnRotation) const
 {
 	if (!IsValid(PickupActorClass) || !IsValid(WorldContextObject)) return;
 
