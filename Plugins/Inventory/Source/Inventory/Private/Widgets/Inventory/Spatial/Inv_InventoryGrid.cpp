@@ -311,7 +311,10 @@ FInv_SlotAvailabilityResult UInv_InventoryGrid::HasRoomForItem(const FInv_ItemMa
 		// How much is the Remainder?
 		Result.Remainder = AmountToFill;
 		
-		if (AmountToFill == 0) return Result;
+		if (AmountToFill == 0)
+		{
+			return Result;
+		}
 	}
 	
 	return Result;
@@ -676,8 +679,10 @@ void UInv_InventoryGrid::AddItemAtIndex(UInv_InventoryItem* Item, const int32 In
 {
 	const FInv_GridFragment* GridFragment = GetFragment<FInv_GridFragment>(Item, FragmentTags::GridFragment);
 	const FInv_ImageFragment* ImageFragment = GetFragment<FInv_ImageFragment>(Item, FragmentTags::IconFragment);
-	if (!GridFragment || !ImageFragment) return;
-
+	if (!GridFragment || !ImageFragment)
+	{
+		return;
+	}
 	UInv_SlottedItem* SlottedItem = CreateSlottedItem(Item, bStackable, StackAmount, GridFragment, ImageFragment, Index);
 	AddSlottedItemToCanvas(Index, GridFragment, SlottedItem);
 	

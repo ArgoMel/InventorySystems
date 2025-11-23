@@ -66,7 +66,10 @@ const T* FInv_ItemManifest::GetFragmentOfTypeWithTag(const FGameplayTag& Fragmen
 	{
 		if (const T* FragmentPtr = Fragment.GetPtr<T>())
 		{
-			if (!FragmentPtr->GetFragmentTag().MatchesTagExact(FragmentTag)) continue;
+			if (!FragmentPtr->GetFragmentTag().MatchesTagExact(FragmentTag))
+			{
+				continue;
+			}
 			return FragmentPtr;
 		}
 	}

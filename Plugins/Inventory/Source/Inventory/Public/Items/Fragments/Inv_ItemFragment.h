@@ -7,12 +7,13 @@
 #include "Inv_ItemFragment.generated.h"
 
 class APlayerController;
+class UInv_CompositeBase;
 
 USTRUCT(BlueprintType)
 struct FInv_ItemFragment
 {
 	GENERATED_BODY()
-
+public:
 	FInv_ItemFragment() {}
 	FInv_ItemFragment(const FInv_ItemFragment&) = default;
 	FInv_ItemFragment& operator=(const FInv_ItemFragment&) = default;
@@ -25,7 +26,6 @@ struct FInv_ItemFragment
 	virtual void Manifest() {}
 	
 private:
-
 	UPROPERTY(EditAnywhere, Category = "Inventory", meta = (Categories="FragmentTags"))
 	FGameplayTag FragmentTag = FGameplayTag::EmptyTag;
 };
@@ -33,13 +33,13 @@ private:
 /*
  * Item fragment specifically for assimilation into a widget.
  */
-class UInv_CompositeBase;
 USTRUCT(BlueprintType)
 struct FInv_InventoryItemFragment : public FInv_ItemFragment
 {
 	GENERATED_BODY()
-
+public:
 	virtual void Assimilate(UInv_CompositeBase* Composite) const;
+	
 protected:
 	bool MatchesWidgetTag(const UInv_CompositeBase* Composite) const;
 };
@@ -48,32 +48,30 @@ USTRUCT(BlueprintType)
 struct FInv_GridFragment : public FInv_ItemFragment
 {
 	GENERATED_BODY()
-
+public:
 	FIntPoint GetGridSize() const { return GridSize; }
 	void SetGridSize(const FIntPoint& Size) { GridSize = Size; }
 	float GetGridPadding() const { return GridPadding; }
 	void SetGridPadding(float Padding) { GridPadding = Padding; }
 
 private:
-
 	UPROPERTY(EditAnywhere, Category = "Inventory")
 	FIntPoint GridSize{1, 1};
 
 	UPROPERTY(EditAnywhere, Category = "Inventory")
 	float GridPadding{0.f};
-	
 };
 
 USTRUCT(BlueprintType)
 struct FInv_ImageFragment : public FInv_InventoryItemFragment
 {
 	GENERATED_BODY()
-
-	UTexture2D* GetIcon() const { return Icon; }
+public:
 	virtual void Assimilate(UInv_CompositeBase* Composite) const override;
+	
+	UTexture2D* GetIcon() const { return Icon; }
 
 private:
-
 	UPROPERTY(EditAnywhere, Category = "Inventory")
 	TObjectPtr<UTexture2D> Icon{nullptr};
 
@@ -85,13 +83,13 @@ USTRUCT(BlueprintType)
 struct FInv_TextFragment : public FInv_InventoryItemFragment
 {
 	GENERATED_BODY()
+public:
+	virtual void Assimilate(UInv_CompositeBase* Composite) const override;
 
 	FText GetText() const { return FragmentText; }
 	void SetText(const FText& Text) { FragmentText = Text; }
-	virtual void Assimilate(UInv_CompositeBase* Composite) const override;
 
 private:
-
 	UPROPERTY(EditAnywhere, Category = "Inventory")
 	FText FragmentText;
 };
@@ -100,9 +98,10 @@ USTRUCT(BlueprintType)
 struct FInv_LabeledNumberFragment : public FInv_InventoryItemFragment
 {
 	GENERATED_BODY()
-
+public:
 	virtual void Assimilate(UInv_CompositeBase* Composite) const override;
 	virtual void Manifest() override;
+	
 	float GetValue() const { return Value; }
 
 	// When manifesting for the first time, this fragment will randomize. However, onee equipped
@@ -110,7 +109,6 @@ struct FInv_LabeledNumberFragment : public FInv_InventoryItemFragment
 	bool bRandomizeOnManifest{true};
 
 private:
-
 	UPROPERTY(EditAnywhere, Category = "Inventory")
 	FText Text_Label{};
 
@@ -140,13 +138,12 @@ USTRUCT(BlueprintType)
 struct FInv_StackableFragment : public FInv_ItemFragment
 {
 	GENERATED_BODY()
-
+public:
 	int32 GetMaxStackSize() const { return MaxStackSize; }
 	int32 GetStackCount() const { return StackCount; }
 	void SetStackCount(int32 Count) { StackCount = Count; }
 
 private:
-
 	UPROPERTY(EditAnywhere, Category = "Inventory")
 	int32 MaxStackSize{1};
 
@@ -154,15 +151,13 @@ private:
 	int32 StackCount{1};
 };
 
-
-
 // Consume Fragments
 
 USTRUCT(BlueprintType)
 struct FInv_ConsumeModifier : public FInv_LabeledNumberFragment
 {
 	GENERATED_BODY()
-
+public:
 	virtual void OnConsume(APlayerController* PC) {}
 };
 

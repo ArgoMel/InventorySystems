@@ -19,7 +19,10 @@ UInv_InventoryComponent* UInv_InventoryStatics::GetInventoryComponent(const APla
 
 EInv_ItemCategory UInv_InventoryStatics::GetItemCategoryFromItemComp(UInv_ItemComponent* ItemComp)
 {
-	if (!IsValid(ItemComp)) return EInv_ItemCategory::None;
+	if (!IsValid(ItemComp))
+	{
+		return EInv_ItemCategory::None;
+	}
 	return ItemComp->GetItemManifest().GetItemCategory();
 }
 
