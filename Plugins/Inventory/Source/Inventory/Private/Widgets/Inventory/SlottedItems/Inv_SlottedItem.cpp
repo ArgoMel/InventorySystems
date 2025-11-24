@@ -37,7 +37,7 @@ void UInv_SlottedItem::UpdateStackCount(int32 StackCount) const
 {
 	if (StackCount > 0)
 	{
-		Text_StackCount->SetVisibility(ESlateVisibility::Visible);
+		Text_StackCount->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		Text_StackCount->SetText(FText::AsNumber(StackCount));
 	}
 	else
