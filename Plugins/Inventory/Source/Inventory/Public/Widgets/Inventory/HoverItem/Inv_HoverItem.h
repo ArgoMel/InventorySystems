@@ -8,13 +8,14 @@
 #include "Inv_HoverItem.generated.h"
 
 class UInv_InventoryItem;
+class UImage;
+class UTextBlock;
+
 /**
  * The HoverItem is the item that will appear and follow the mouse
  * when an inventory item on the grid has been clicked.
  */
-class UImage;
-class UTextBlock;
-UCLASS()
+UCLASS(Abstract)
 class INVENTORY_API UInv_HoverItem : public UUserWidget
 {
 	GENERATED_BODY()
@@ -34,7 +35,6 @@ public:
 	void SetInventoryItem(UInv_InventoryItem* Item);
 	
 private:
-
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UImage> Image_Icon;
 
@@ -46,5 +46,4 @@ private:
 	TWeakObjectPtr<UInv_InventoryItem> InventoryItem;
 	bool bIsStackable{false};
 	int32 StackCount{0};
-
 };

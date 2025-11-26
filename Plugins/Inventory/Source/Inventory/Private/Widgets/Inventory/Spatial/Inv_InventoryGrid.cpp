@@ -517,8 +517,10 @@ void UInv_InventoryGrid::OnHide()
 
 void UInv_InventoryGrid::AddStacks(const FInv_SlotAvailabilityResult& Result)
 {
-	if (!MatchesCategory(Result.Item.Get())) return;
-
+	if (!MatchesCategory(Result.Item.Get()))
+	{
+		return;
+	}
 	for (const auto& Availability : Result.SlotAvailabilities)
 	{
 		if (Availability.bItemAtIndex)
