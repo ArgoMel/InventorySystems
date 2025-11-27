@@ -465,8 +465,10 @@ void UInv_InventoryGrid::AssignHoverItem(UInv_InventoryItem* InventoryItem, cons
 void UInv_InventoryGrid::RemoveItemFromGrid(UInv_InventoryItem* InventoryItem, const int32 GridIndex)
 {
 	const FInv_GridFragment* GridFragment = GetFragment<FInv_GridFragment>(InventoryItem, FragmentTags::GridFragment);
-	if (!GridFragment) return;
-
+	if (!GridFragment)
+	{
+		return;
+	}
 	UInv_InventoryStatics::ForEach2D(GridSlots, GridIndex, GridFragment->GetGridSize(), Columns, [&](UInv_GridSlot* GridSlot)
 	{
 		GridSlot->SetInventoryItem(nullptr);
@@ -493,8 +495,10 @@ void UInv_InventoryGrid::AssignHoverItem(UInv_InventoryItem* InventoryItem)
 
 	const FInv_GridFragment* GridFragment = GetFragment<FInv_GridFragment>(InventoryItem, FragmentTags::GridFragment);
 	const FInv_ImageFragment* ImageFragment = GetFragment<FInv_ImageFragment>(InventoryItem, FragmentTags::IconFragment);
-	if (!GridFragment || !ImageFragment) return;
-
+	if (!GridFragment || !ImageFragment)
+	{
+		return;
+	}
 	const FVector2D DrawSize = GetDrawSize(GridFragment);
 
 	FSlateBrush IconBrush;
@@ -604,7 +608,7 @@ void UInv_InventoryGrid::OnSlottedItemClicked(int32 GridIndex, const FPointerEve
 
 void UInv_InventoryGrid::CreateItemPopUp(const int32 GridIndex)
 {
-	UInv_InventoryItem* RightClickedItem = GridSlots[GridIndex]->GetInventoryItem().Get();
+	const UInv_InventoryItem* RightClickedItem = GridSlots[GridIndex]->GetInventoryItem().Get();
 	if (!IsValid(RightClickedItem)) return;
 	if (IsValid(GridSlots[GridIndex]->GetItemPopUp())) return;
 
