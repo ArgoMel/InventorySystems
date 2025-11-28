@@ -54,7 +54,7 @@ USTRUCT(BlueprintType)
 struct FInv_TileParameters
 {
 	GENERATED_BODY()
-
+public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Inventory")
 	FIntPoint TileCoordinates{};
 
@@ -67,14 +67,16 @@ struct FInv_TileParameters
 
 inline bool operator==(const FInv_TileParameters& A, const FInv_TileParameters& B)
 {
-	return A.TileCoordinates == B.TileCoordinates && A.TileIndex == B.TileIndex && A.TileQuadrant == B.TileQuadrant;
+	return A.TileCoordinates == B.TileCoordinates
+	&& A.TileIndex == B.TileIndex
+	&& A.TileQuadrant == B.TileQuadrant;
 }
 
 USTRUCT()
 struct FInv_SpaceQueryResult
 {
 	GENERATED_BODY()
-
+public:
 	// True if the space queried has no items in it
 	bool bHasSpace{false};
 

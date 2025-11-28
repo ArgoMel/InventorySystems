@@ -48,8 +48,10 @@ void UInv_InventoryGrid::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 
 void UInv_InventoryGrid::UpdateTileParameters(const FVector2D& CanvasPosition, const FVector2D& MousePosition)
 {
-	if (!bMouseWithinCanvas) return;
-	
+	if (!bMouseWithinCanvas)
+	{
+		return;
+	}
 	// Calculate the tile quadrant, tile index, and coordinates
 	const FIntPoint HoveredTileCoordinates = CalculateHoveredCoordinates(CanvasPosition, MousePosition);
 	
@@ -63,8 +65,10 @@ void UInv_InventoryGrid::UpdateTileParameters(const FVector2D& CanvasPosition, c
 
 void UInv_InventoryGrid::OnTileParametersUpdated(const FInv_TileParameters& Parameters)
 {
-	if (!IsValid(HoverItem)) return;
-
+	if (!IsValid(HoverItem))
+	{
+		return;
+	}
 	// Get Hover Item's dimensions
 	const FIntPoint Dimensions = HoverItem->GetGridDimensions();
 	
@@ -81,11 +85,14 @@ void UInv_InventoryGrid::OnTileParametersUpdated(const FInv_TileParameters& Para
 	}
 	UnHighlightSlots(LastHighlightedIndex, LastHighlightedDimensions);
 
-	if (CurrentQueryResult.ValidItem.IsValid() && GridSlots.IsValidIndex(CurrentQueryResult.UpperLeftIndex))
+	if (CurrentQueryResult.ValidItem.IsValid()
+		&& GridSlots.IsValidIndex(CurrentQueryResult.UpperLeftIndex))
 	{
 		const FInv_GridFragment* GridFragment = GetFragment<FInv_GridFragment>(CurrentQueryResult.ValidItem.Get(), FragmentTags::GridFragment);
-		if (!GridFragment) return;
-
+		if (!GridFragment)
+		{
+			return;
+		}
 		ChangeHoverType(CurrentQueryResult.UpperLeftIndex, GridFragment->GetGridSize(), EInv_GridSlotState::GrayedOut);
 	}
 }
@@ -95,8 +102,10 @@ FInv_SpaceQueryResult UInv_InventoryGrid::CheckHoverPosition(const FIntPoint& Po
 	FInv_SpaceQueryResult Result;
 	
 	// in the grid bounds?
-	if (!IsInGridBounds(UInv_WidgetUtils::GetIndexFromPosition(Position, Columns), Dimensions)) return Result;
-
+	if (!IsInGridBounds(UInv_WidgetUtils::GetIndexFromPosition(Position, Columns), Dimensions))
+	{
+		return Result;
+	}
 	Result.bHasSpace = true;
 	
 	// If more than one of the indices is occupied with the same item, we need to see if they all have the same upper left index.
@@ -111,7 +120,8 @@ FInv_SpaceQueryResult UInv_InventoryGrid::CheckHoverPosition(const FIntPoint& Po
 	});
 	
 	// if so, is there only one item in the way? (can we swap?)
-	if (OccupiedUpperLeftIndices.Num() == 1) // single item at position - it's valid for swapping/combining
+	// single item at position - it's valid for swapping/combining
+	if (OccupiedUpperLeftIndices.Num() == 1) 
 	{
 		const int32 Index = *OccupiedUpperLeftIndices.CreateConstIterator();
 		Result.ValidItem = GridSlots[Index]->GetInventoryItem();
@@ -135,7 +145,10 @@ bool UInv_InventoryGrid::CursorExitedCanvas(const FVector2D& BoundaryPos, const 
 
 void UInv_InventoryGrid::HighlightSlots(const int32 Index, const FIntPoint& Dimensions)
 {
-	if (!bMouseWithinCanvas) return;
+	if (!bMouseWithinCanvas)
+	{
+		return;
+	}
 	UnHighlightSlots(LastHighlightedIndex, LastHighlightedDimensions);
 	UInv_InventoryStatics::ForEach2D(GridSlots, Index, Dimensions, Columns, [&](UInv_GridSlot* GridSlot)
 	{
@@ -210,9 +223,9 @@ FIntPoint UInv_InventoryGrid::CalculateStartingCoordinate(const FIntPoint& Coord
 			StartingCoord.X = Coordinate.X - FMath::FloorToInt(0.5f * Dimensions.X) + HasEvenWidth;
 			StartingCoord.Y = Coordinate.Y - FMath::FloorToInt(0.5f * Dimensions.Y) + HasEvenHeight;
 			break;
-	default:
-		UE_LOG(LogInventory, Error, TEXT("Invalid Quadrant."))
-		return FIntPoint(-1, -1);
+		default:
+			UE_LOG(LogInventory, Error, TEXT("Invalid Quadrant."))
+			return FIntPoint(-1, -1);
 	}
 	return StartingCoord;
 }
@@ -236,11 +249,22 @@ EInv_TileQuadrant UInv_InventoryGrid::CalculateTileQuadrant(const FVector2D& Can
 	const bool bIsLeft = TileLocalX < TileSize / 2.f; // Left if X is in the left half
 
 	EInv_TileQuadrant HoveredTileQuadrant{EInv_TileQuadrant::None};
-	if (bIsTop && bIsLeft) HoveredTileQuadrant = EInv_TileQuadrant::TopLeft;
-	else if (bIsTop && !bIsLeft) HoveredTileQuadrant = EInv_TileQuadrant::TopRight;
-	else if (!bIsTop && bIsLeft) HoveredTileQuadrant = EInv_TileQuadrant::BottomLeft;
-	else if (!bIsTop && !bIsLeft) HoveredTileQuadrant = EInv_TileQuadrant::BottomRight;
-
+	if (bIsTop && bIsLeft)
+	{
+		HoveredTileQuadrant = EInv_TileQuadrant::TopLeft;
+	}
+	else if (bIsTop && !bIsLeft)
+	{
+		HoveredTileQuadrant = EInv_TileQuadrant::TopRight;
+	}
+	else if (!bIsTop && bIsLeft)
+	{
+		HoveredTileQuadrant = EInv_TileQuadrant::BottomLeft;
+	}
+	else if (!bIsTop && !bIsLeft)
+	{
+		HoveredTileQuadrant = EInv_TileQuadrant::BottomRight;
+	}
 	return HoveredTileQuadrant;
 }
 
