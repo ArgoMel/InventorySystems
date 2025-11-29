@@ -1,6 +1,5 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Widgets/ItemPopUp/Inv_ItemPopUp.h"
 
 #include "Components/Button.h"
@@ -53,6 +52,7 @@ void UInv_ItemPopUp::ConsumeButtonClicked()
 	}
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void UInv_ItemPopUp::SliderValueChanged(float Value)
 {
 	Text_SplitAmount->SetText(FText::AsNumber(FMath::Floor(Value)));

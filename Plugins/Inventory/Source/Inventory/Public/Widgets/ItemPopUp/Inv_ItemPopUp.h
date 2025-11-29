@@ -6,10 +6,6 @@
 #include "Blueprint/UserWidget.h"
 #include "Inv_ItemPopUp.generated.h"
 
-/**
- * The item popup widget shows up when right-clicking on an item
- * in the inventory grid.
- */
 class UButton;
 class USlider;
 class UTextBlock;
@@ -19,18 +15,19 @@ DECLARE_DYNAMIC_DELEGATE_TwoParams(FPopUpMenuSplit, int32, SplitAmount, int32, I
 DECLARE_DYNAMIC_DELEGATE_OneParam(FPopUpMenuDrop, int32, Index);
 DECLARE_DYNAMIC_DELEGATE_OneParam(FPopUpMenuConsume, int32, Index);
 
-UCLASS()
+/**
+ * The item popup widget shows up when right-clicking on an item
+ * in the inventory grid.
+ */
+UCLASS(Abstract)
 class INVENTORY_API UInv_ItemPopUp : public UUserWidget
 {
 	GENERATED_BODY()
-public:
+protected:
 	virtual void NativeOnInitialized() override;
 	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
-	
-	FPopUpMenuSplit OnSplit;
-	FPopUpMenuDrop OnDrop;
-	FPopUpMenuConsume OnConsume;
 
+public:
 	int32 GetSplitAmount() const;
 	void CollapseSplitButton() const;
 	void CollapseConsumeButton() const;
@@ -38,9 +35,26 @@ public:
 	FVector2D GetBoxSize() const;
 	void SetGridIndex(int32 Index) { GridIndex = Index; }
 	int32 GetGridIndex() const { return GridIndex; }
+
+private:
+	UFUNCTION()
+	void SplitButtonClicked();
+
+	UFUNCTION()
+	void DropButtonClicked();
+
+	UFUNCTION()
+	void ConsumeButtonClicked();
+
+	UFUNCTION()
+	void SliderValueChanged(float Value);
+	
+public:
+	FPopUpMenuSplit OnSplit;
+	FPopUpMenuDrop OnDrop;
+	FPopUpMenuConsume OnConsume;
 	
 private:
-
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> Button_Split;
 
@@ -60,17 +74,4 @@ private:
 	TObjectPtr<USizeBox> SizeBox_Root;
 
 	int32 GridIndex{INDEX_NONE};
-
-	UFUNCTION()
-	void SplitButtonClicked();
-
-	UFUNCTION()
-	void DropButtonClicked();
-
-	UFUNCTION()
-	void ConsumeButtonClicked();
-
-	UFUNCTION()
-	void SliderValueChanged(float Value);
-	
 };
