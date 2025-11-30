@@ -33,11 +33,16 @@ void FInv_ItemManifest::AssimilateInventoryFragments(UInv_CompositeBase* Composi
 
 void FInv_ItemManifest::SpawnPickupActor(const UObject* WorldContextObject, const FVector& SpawnLocation, const FRotator& SpawnRotation) const
 {
-	if (!IsValid(PickupActorClass) || !IsValid(WorldContextObject)) return;
-
-	AActor* SpawnedActor = WorldContextObject->GetWorld()->SpawnActor<AActor>(PickupActorClass, SpawnLocation, SpawnRotation);
-	if (!IsValid(SpawnedActor)) return;
-
+	if (!IsValid(PickupActorClass) 
+		|| !IsValid(WorldContextObject))
+	{
+		return;
+	}
+	const AActor* SpawnedActor = WorldContextObject->GetWorld()->SpawnActor<AActor>(PickupActorClass, SpawnLocation, SpawnRotation);
+	if (!IsValid(SpawnedActor))
+	{
+		return;
+	}
 	// Set the item manifest, item category, item type, etc.
 	UInv_ItemComponent* ItemComp = SpawnedActor->FindComponentByClass<UInv_ItemComponent>();
 	check(ItemComp);

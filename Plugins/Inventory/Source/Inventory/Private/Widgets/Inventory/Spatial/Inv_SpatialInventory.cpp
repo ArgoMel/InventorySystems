@@ -55,7 +55,10 @@ void UInv_SpatialInventory::NativeTick(const FGeometry& MyGeometry, float InDelt
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	if (!IsValid(ItemDescription)) return;
+	if (!IsValid(ItemDescription))
+	{
+		return;
+	}
 	SetItemDescriptionSizeAndPosition(ItemDescription, CanvasPanel);
 	SetEquippedItemDescriptionSizeAndPosition(ItemDescription, EquippedItemDescription, CanvasPanel);
 }
@@ -110,15 +113,27 @@ void UInv_SpatialInventory::OnItemUnHovered()
 
 bool UInv_SpatialInventory::HasHoverItem() const
 {
-	if (Grid_Equippable->HasHoverItem()) return true;
-	if (Grid_Consumables->HasHoverItem()) return true;
-	if (Grid_Craftables->HasHoverItem()) return true;
+	if (Grid_Equippable->HasHoverItem())
+	{
+		return true;
+	}
+	if (Grid_Consumables->HasHoverItem())
+	{
+		return true;
+	}
+	if (Grid_Craftables->HasHoverItem())
+	{
+		return true;
+	}
 	return false;
 }
 
 UInv_HoverItem* UInv_SpatialInventory::GetHoverItem() const
 {
-	if (!ActiveGrid.IsValid()) return nullptr;
+	if (!ActiveGrid.IsValid())
+	{
+		return nullptr;
+	}
 	return ActiveGrid->GetHoverItem();
 }
 
@@ -130,9 +145,11 @@ float UInv_SpatialInventory::GetTileSize() const
 void UInv_SpatialInventory::EquippedGridSlotClicked(UInv_EquippedGridSlot* EquippedGridSlot, const FGameplayTag& EquipmentTypeTag)
 {
 	// Check to see if we can equip the Hover Item
-	if (!CanEquipHoverItem(EquippedGridSlot, EquipmentTypeTag)) return;
-
-	UInv_HoverItem* HoverItem = GetHoverItem();
+	if (!CanEquipHoverItem(EquippedGridSlot, EquipmentTypeTag))
+	{
+		return;
+	}
+	const UInv_HoverItem* HoverItem = GetHoverItem();
 	
 	// Create an Equipped Slotted Item and add it to the Equipped Grid Slot (call EquippedGridSlot->OnItemEquipped())
 	const float TileSize = UInv_InventoryStatics::GetInventoryWidget(GetOwningPlayer())->GetTileSize();
@@ -158,8 +175,10 @@ void UInv_SpatialInventory::EquippedSlottedItemClicked(UInv_EquippedSlottedItem*
 	// Remove the Item Description
 	UInv_InventoryStatics::ItemUnhovered(GetOwningPlayer());
 
-	if (IsValid(GetHoverItem()) && GetHoverItem()->IsStackable()) return;
-	
+	if (IsValid(GetHoverItem()) && GetHoverItem()->IsStackable())
+	{
+		return;
+	}
 	// Get Item to Equip
 	UInv_InventoryItem* ItemToEquip = IsValid(GetHoverItem()) ? GetHoverItem()->GetInventoryItem() : nullptr;
 	
@@ -188,8 +207,10 @@ void UInv_SpatialInventory::EquippedSlottedItemClicked(UInv_EquippedSlottedItem*
 void UInv_SpatialInventory::SetItemDescriptionSizeAndPosition(UInv_ItemDescription* Description, UCanvasPanel* Canvas) const
 {
 	UCanvasPanelSlot* ItemDescriptionCPS = UWidgetLayoutLibrary::SlotAsCanvasSlot(Description);
-	if (!IsValid(ItemDescriptionCPS)) return;
-
+	if (!IsValid(ItemDescriptionCPS))
+	{
+		return;
+	}
 	const FVector2D ItemDescriptionSize = Description->GetBoxSize();
 	ItemDescriptionCPS->SetSize(ItemDescriptionSize);
 
