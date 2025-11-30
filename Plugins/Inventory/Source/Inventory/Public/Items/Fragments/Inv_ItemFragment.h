@@ -8,6 +8,7 @@
 
 class APlayerController;
 class UInv_CompositeBase;
+class AInv_EquipActor;
 
 USTRUCT(BlueprintType)
 struct FInv_ItemFragment
@@ -104,7 +105,7 @@ public:
 	
 	float GetValue() const { return Value; }
 
-	// When manifesting for the first time, this fragment will randomize. However, onee equipped
+	// When manifesting for the first time, this fragment will randomize. However, one equipped
 	// and dropped, an item should retain the same value, so randomization should not occur.
 	bool bRandomizeOnManifest{true};
 
@@ -165,12 +166,12 @@ USTRUCT(BlueprintType)
 struct FInv_ConsumableFragment : public FInv_InventoryItemFragment
 {
 	GENERATED_BODY()
-
+public:
 	virtual void OnConsume(APlayerController* PC);
 	virtual void Assimilate(UInv_CompositeBase* Composite) const override;
 	virtual void Manifest() override;
+	
 private:
-
 	UPROPERTY(EditAnywhere, Category = "Inventory", meta = (ExcludeBaseStruct))
 	TArray<TInstancedStruct<FInv_ConsumeModifier>> ConsumeModifiers;
 };
@@ -179,7 +180,7 @@ USTRUCT(BlueprintType)
 struct FInv_HealthPotionFragment : public FInv_ConsumeModifier
 {
 	GENERATED_BODY()
-
+public:
 	virtual void OnConsume(APlayerController* PC) override;
 };
 
@@ -187,14 +188,11 @@ USTRUCT(BlueprintType)
 struct FInv_ManaPotionFragment : public FInv_ConsumeModifier
 {
 	GENERATED_BODY()
-
+public:
 	virtual void OnConsume(APlayerController* PC) override;
 };
 
-
 // Equipment
-//
-
 USTRUCT(BlueprintType)
 struct FInv_EquipModifier : public FInv_LabeledNumberFragment
 {
@@ -231,7 +229,6 @@ struct FInv_DamageModifier : public FInv_EquipModifier
 	virtual void OnUnequip(APlayerController* PC) override;
 };
 
-class AInv_EquipActor;
 USTRUCT(BlueprintType)
 struct FInv_EquipmentFragment : public FInv_InventoryItemFragment
 {
@@ -249,7 +246,6 @@ struct FInv_EquipmentFragment : public FInv_InventoryItemFragment
 	void SetEquippedActor(AInv_EquipActor* EquipActor);
 	
 private:
-
 	UPROPERTY(EditAnywhere, Category = "Inventory")
 	TArray<TInstancedStruct<FInv_EquipModifier>> EquipModifiers;
 

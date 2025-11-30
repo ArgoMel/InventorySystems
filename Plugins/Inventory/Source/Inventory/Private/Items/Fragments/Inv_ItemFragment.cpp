@@ -104,85 +104,99 @@ void FInv_HealthPotionFragment::OnConsume(APlayerController* PC)
 	// Get a stats component from the PC or the PC->GetPawn()
 	// or get the Ability System Component and apply a Gameplay Effect
 	// or call an interface function for Healing()
-
+#if WITH_EDITOR	
 	GEngine->AddOnScreenDebugMessage(
 		-1,
 		5.f,
 		FColor::Green,
 		FString::Printf(TEXT("Health Potion consumed! Healing by: %f"),
 			GetValue()));
+#endif
 }
 
 void FInv_ManaPotionFragment::OnConsume(APlayerController* PC)
 {
 	// Replenish mana however you wish
-
+#if WITH_EDITOR	
 	GEngine->AddOnScreenDebugMessage(
 		-1,
 		5.f,
 		FColor::Blue,
 		FString::Printf(TEXT("Mana Potion consumed! Mana replenished by: %f"),
 			GetValue()));
+#endif
 }
 
 void FInv_StrengthModifier::OnEquip(APlayerController* PC)
 {
+#if WITH_EDITOR	
 	GEngine->AddOnScreenDebugMessage(
 		-1,
 		5.f,
 		FColor::Green,
 		FString::Printf(TEXT("Strength increased by: %f"),
 			GetValue()));
+#endif
 }
 
 void FInv_StrengthModifier::OnUnequip(APlayerController* PC)
 {
+#if WITH_EDITOR	
 	GEngine->AddOnScreenDebugMessage(
 		-1,
 		5.f,
 		FColor::Red,
 		FString::Printf(TEXT("Item unequipped. Strength decreased by: %f"),
 			GetValue()));
+#endif
 }
 
 void FInv_ArmorModifier::OnEquip(APlayerController* PC)
 {
+#if WITH_EDITOR	
 	GEngine->AddOnScreenDebugMessage(
 		-1,
 		5.f,
 		FColor::Green,
 		FString::Printf(TEXT("Item equipped. Armor increased by: %f"),
 			GetValue()));
+#endif
 }
 
 void FInv_ArmorModifier::OnUnequip(APlayerController* PC)
 {
+#if WITH_EDITOR	
 	GEngine->AddOnScreenDebugMessage(
 		-1,
 		5.f,
 		FColor::Red,
 		FString::Printf(TEXT("Item unequipped. Armor decreased by: %f"),
 			GetValue()));
+#endif
 }
 
 void FInv_DamageModifier::OnEquip(APlayerController* PC)
 {
+#if WITH_EDITOR	
 	GEngine->AddOnScreenDebugMessage(
 		-1,
 		5.f,
 		FColor::Green,
 		FString::Printf(TEXT("Item equipped. Damage increased by: %f"),
 			GetValue()));
+#endif
 }
 
 void FInv_DamageModifier::OnUnequip(APlayerController* PC)
 {
+#if WITH_EDITOR	
 	GEngine->AddOnScreenDebugMessage(
 		-1,
 		5.f,
 		FColor::Red,
-		FString::Printf(TEXT("Item equipped. Damage increased by: %f"),
+		FString::Printf(TEXT("Item unequipped. Damage increased by: %f"),
 			GetValue()));
+#endif
 }
 
 void FInv_EquipmentFragment::OnEquip(APlayerController* PC)
