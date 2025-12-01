@@ -29,42 +29,58 @@ EInv_ItemCategory UInv_InventoryStatics::GetItemCategoryFromItemComp(UInv_ItemCo
 void UInv_InventoryStatics::ItemHovered(APlayerController* PC, UInv_InventoryItem* Item)
 {
 	const UInv_InventoryComponent* IC = GetInventoryComponent(PC);
-	if (!IsValid(IC)) return;
-
+	if (!IsValid(IC))
+	{
+		return;
+	}
 	UInv_InventoryBase* InventoryBase = IC->GetInventoryMenu();
-	if (!IsValid(InventoryBase)) return;
-
-	if (InventoryBase->HasHoverItem()) return;
-
+	if (!IsValid(InventoryBase))
+	{
+		return;
+	}
+	if (InventoryBase->HasHoverItem())
+	{
+		return;
+	}
 	InventoryBase->OnItemHovered(Item);
 }
 
 void UInv_InventoryStatics::ItemUnhovered(APlayerController* PC)
 {
 	const UInv_InventoryComponent* IC = GetInventoryComponent(PC);
-	if (!IsValid(IC)) return;
-
+	if (!IsValid(IC))
+	{
+		return;
+	}
 	UInv_InventoryBase* InventoryBase = IC->GetInventoryMenu();
-	if (!IsValid(InventoryBase)) return;
-
+	if (!IsValid(InventoryBase))
+	{
+		return;
+	}
 	InventoryBase->OnItemUnHovered();
 }
 
 UInv_HoverItem* UInv_InventoryStatics::GetHoverItem(APlayerController* PC)
 {
 	const UInv_InventoryComponent* IC = GetInventoryComponent(PC);
-	if (!IsValid(IC)) return nullptr;
-
+	if (!IsValid(IC))
+	{
+		return nullptr;
+	}
 	const UInv_InventoryBase* InventoryBase = IC->GetInventoryMenu();
-	if (!IsValid(InventoryBase)) return nullptr;
-
+	if (!IsValid(InventoryBase))
+	{
+		return nullptr;
+	}
 	return InventoryBase->GetHoverItem();
 }
 
 UInv_InventoryBase* UInv_InventoryStatics::GetInventoryWidget(APlayerController* PC)
 {
 	const UInv_InventoryComponent* IC = GetInventoryComponent(PC);
-	if (!IsValid(IC)) return nullptr;
-
+	if (!IsValid(IC))
+	{
+		return nullptr;
+	}
 	return IC->GetInventoryMenu();
 }

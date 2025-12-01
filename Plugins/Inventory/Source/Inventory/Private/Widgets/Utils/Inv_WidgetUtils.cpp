@@ -29,23 +29,27 @@ bool UInv_WidgetUtils::IsWithinBounds(const FVector2D& BoundaryPos, const FVecto
 FVector2D UInv_WidgetUtils::GetClampedWidgetPosition(const FVector2D& Boundary, const FVector2D& WidgetSize, const FVector2D& MousePos)
 {
 	FVector2D ClampedPosition = MousePos;
-
+	
 	// Adjust horizontal position to ensure that the widget stays within the boundary
-	if (MousePos.X + WidgetSize.X > Boundary.X) // Widget exceeds the right edge
+	// Widget exceeds the right edge
+	if (MousePos.X + WidgetSize.X > Boundary.X) 
 	{
 		ClampedPosition.X = Boundary.X - WidgetSize.X;
 	}
-	if (MousePos.X < 0.f) // Widget exceeds the left edge
+	// Widget exceeds the left edge
+	if (MousePos.X < 0.f) 
 	{
 		ClampedPosition.X = 0.f;
 	}
 
 	// Adjust vertical position to ensure that the widget stays within the boundary
-	if (MousePos.Y + WidgetSize.Y > Boundary.Y) // Widget exceeds the bottom edge
+	// Widget exceeds the bottom edge
+	if (MousePos.Y + WidgetSize.Y > Boundary.Y) 
 	{
 		ClampedPosition.Y = Boundary.Y - WidgetSize.Y;
 	}
-	if (MousePos.Y < 0.f) // Widget exceeds the top edge
+	// Widget exceeds the top edge
+	if (MousePos.Y < 0.f) 
 	{
 		ClampedPosition.Y = 0.f;
 	}
