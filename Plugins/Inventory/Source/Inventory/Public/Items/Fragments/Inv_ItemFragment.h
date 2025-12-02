@@ -153,7 +153,6 @@ private:
 };
 
 // Consume Fragments
-
 USTRUCT(BlueprintType)
 struct FInv_ConsumeModifier : public FInv_LabeledNumberFragment
 {

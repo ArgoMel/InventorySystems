@@ -9,11 +9,10 @@
 class UImage;
 class USizeBox;
 
-UCLASS()
+UCLASS(Abstract)
 class INVENTORY_API UInv_Leaf_Image : public UInv_Leaf
 {
 	GENERATED_BODY()
-
 public:
 	void SetImage(UTexture2D* Texture) const;
 	void SetBoxSize(const FVector2D& Size) const;
@@ -21,7 +20,6 @@ public:
 	FVector2D GetImageSize() const;
 	
 private:
-
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UImage> Image_Icon;
 

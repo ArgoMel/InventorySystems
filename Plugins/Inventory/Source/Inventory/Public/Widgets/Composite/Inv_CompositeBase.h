@@ -8,10 +8,7 @@
 
 #include "Inv_CompositeBase.generated.h"
 
-/**
- * 
- */
-UCLASS()
+UCLASS(Abstract)
 class INVENTORY_API UInv_CompositeBase : public UUserWidget
 {
 	GENERATED_BODY()
@@ -23,8 +20,8 @@ public:
 
 	using FuncType = TFunction<void(UInv_CompositeBase*)>;
 	virtual void ApplyFunction(FuncType Function) {}
+	
 private:
-
-	UPROPERTY(EditAnywhere, Category = "Inventory")
+	UPROPERTY(EditAnywhere, Category = "Inventory",meta = (Categories="FragmentTags"))
 	FGameplayTag FragmentTag;
 };

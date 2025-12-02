@@ -9,7 +9,10 @@
 
 void FInv_InventoryItemFragment::Assimilate(UInv_CompositeBase* Composite) const
 {
-	if (!MatchesWidgetTag(Composite)) return;
+	if (!MatchesWidgetTag(Composite)) 
+	{
+		return;
+	}
 	Composite->Expand();
 }
 
@@ -21,11 +24,15 @@ bool FInv_InventoryItemFragment::MatchesWidgetTag(const UInv_CompositeBase* Comp
 void FInv_ImageFragment::Assimilate(UInv_CompositeBase* Composite) const
 {
 	FInv_InventoryItemFragment::Assimilate(Composite);
-	if (!MatchesWidgetTag(Composite)) return;
-
-	UInv_Leaf_Image* Image = Cast<UInv_Leaf_Image>(Composite);
-	if (!IsValid(Image)) return;
-
+	if (!MatchesWidgetTag(Composite)) 
+	{
+		return;
+	}
+	const UInv_Leaf_Image* Image = Cast<UInv_Leaf_Image>(Composite);
+	if (!IsValid(Image)) 
+	{
+		return;
+	}
 	Image->SetImage(Icon);
 	Image->SetBoxSize(IconDimensions);
 	Image->SetImageSize(IconDimensions);
@@ -34,22 +41,30 @@ void FInv_ImageFragment::Assimilate(UInv_CompositeBase* Composite) const
 void FInv_TextFragment::Assimilate(UInv_CompositeBase* Composite) const
 {
 	FInv_InventoryItemFragment::Assimilate(Composite);
-	if (!MatchesWidgetTag(Composite)) return;
-
-	UInv_Leaf_Text* LeafText = Cast<UInv_Leaf_Text>(Composite);
-	if (!IsValid(LeafText)) return;
-
+	if (!MatchesWidgetTag(Composite)) 
+	{
+		return;
+	}
+	const UInv_Leaf_Text* LeafText = Cast<UInv_Leaf_Text>(Composite);
+	if (!IsValid(LeafText)) 
+	{
+		return;
+	}
 	LeafText->SetText(FragmentText);
 }
 
 void FInv_LabeledNumberFragment::Assimilate(UInv_CompositeBase* Composite) const
 {
 	FInv_InventoryItemFragment::Assimilate(Composite);
-	if (!MatchesWidgetTag(Composite)) return;
-	
-	UInv_Leaf_LabeledValue* LabeledValue = Cast<UInv_Leaf_LabeledValue>(Composite);
-	if (!IsValid(LabeledValue)) return;
-
+	if (!MatchesWidgetTag(Composite)) 
+	{
+		return;
+	}
+	const UInv_Leaf_LabeledValue* LabeledValue = Cast<UInv_Leaf_LabeledValue>(Composite);
+	if (!IsValid(LabeledValue)) 
+	{
+		return;
+	}
 	LabeledValue->SetText_Label(Text_Label, bCollapseLabel);
 
 	FNumberFormattingOptions Options;

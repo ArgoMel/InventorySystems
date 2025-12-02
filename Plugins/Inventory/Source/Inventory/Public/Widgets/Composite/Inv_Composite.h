@@ -6,17 +6,18 @@
 #include "Inv_CompositeBase.h"
 #include "Inv_Composite.generated.h"
 
-/**
- * 
- */
-UCLASS()
+UCLASS(Abstract)
 class INVENTORY_API UInv_Composite : public UInv_CompositeBase
 {
 	GENERATED_BODY()
-public:
+protected:
 	virtual void NativeOnInitialized() override;
-	virtual void ApplyFunction(FuncType Function) override;
+	
+public:
 	virtual void Collapse() override;
+	virtual void ApplyFunction(FuncType Function) override;
+	
+public:
 	TArray<UInv_CompositeBase*> GetChildren() { return Children; }
 	
 private:

@@ -6,10 +6,7 @@
 #include "Inv_CompositeBase.h"
 #include "Inv_Leaf.generated.h"
 
-/**
- * 
- */
-UCLASS()
+UCLASS(Abstract)
 class INVENTORY_API UInv_Leaf : public UInv_CompositeBase
 {
 	GENERATED_BODY()
