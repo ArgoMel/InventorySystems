@@ -166,10 +166,11 @@ struct FInv_ConsumableFragment : public FInv_InventoryItemFragment
 {
 	GENERATED_BODY()
 public:
-	virtual void OnConsume(APlayerController* PC);
 	virtual void Assimilate(UInv_CompositeBase* Composite) const override;
 	virtual void Manifest() override;
 	
+	virtual void OnConsume(APlayerController* PC);
+
 private:
 	UPROPERTY(EditAnywhere, Category = "Inventory", meta = (ExcludeBaseStruct))
 	TArray<TInstancedStruct<FInv_ConsumeModifier>> ConsumeModifiers;
@@ -196,7 +197,7 @@ USTRUCT(BlueprintType)
 struct FInv_EquipModifier : public FInv_LabeledNumberFragment
 {
 	GENERATED_BODY()
-
+public:
 	virtual void OnEquip(APlayerController* PC) {}
 	virtual void OnUnequip(APlayerController* PC) {}
 };
@@ -205,7 +206,7 @@ USTRUCT(BlueprintType)
 struct FInv_StrengthModifier : public FInv_EquipModifier
 {
 	GENERATED_BODY()
-
+public:
 	virtual void OnEquip(APlayerController* PC) override;
 	virtual void OnUnequip(APlayerController* PC) override;
 };
@@ -214,7 +215,7 @@ USTRUCT(BlueprintType)
 struct FInv_ArmorModifier : public FInv_EquipModifier
 {
 	GENERATED_BODY()
-
+public:
 	virtual void OnEquip(APlayerController* PC) override;
 	virtual void OnUnequip(APlayerController* PC) override;
 };
@@ -223,7 +224,7 @@ USTRUCT(BlueprintType)
 struct FInv_DamageModifier : public FInv_EquipModifier
 {
 	GENERATED_BODY()
-
+public:
 	virtual void OnEquip(APlayerController* PC) override;
 	virtual void OnUnequip(APlayerController* PC) override;
 };
@@ -232,17 +233,19 @@ USTRUCT(BlueprintType)
 struct FInv_EquipmentFragment : public FInv_InventoryItemFragment
 {
 	GENERATED_BODY()
-
-	bool bEquipped{false};
-	void OnEquip(APlayerController* PC);
-	void OnUnequip(APlayerController* PC);
+public:
 	virtual void Assimilate(UInv_CompositeBase* Composite) const override;
 	virtual void Manifest() override;
 
+	void OnEquip(APlayerController* PC);
+	void OnUnequip(APlayerController* PC);
+	
 	AInv_EquipActor* SpawnAttachedActor(USkeletalMeshComponent* AttachMesh) const;
 	void DestroyAttachedActor() const;
 	FGameplayTag GetEquipmentType() const { return EquipmentType; }
 	void SetEquippedActor(AInv_EquipActor* EquipActor);
+	
+	bool bEquipped{false};
 	
 private:
 	UPROPERTY(EditAnywhere, Category = "Inventory")

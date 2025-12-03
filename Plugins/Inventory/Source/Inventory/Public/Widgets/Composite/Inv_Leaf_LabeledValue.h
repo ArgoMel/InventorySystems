@@ -8,18 +8,18 @@
 
 class UTextBlock;
 
-UCLASS()
+UCLASS(Abstract)
 class INVENTORY_API UInv_Leaf_LabeledValue : public UInv_Leaf
 {
 	GENERATED_BODY()
-public:
-
-	void SetText_Label(const FText& Text, bool bCollapse) const;
-	void SetText_Value(const FText& Text, bool bCollapse) const;
+protected:
 	virtual void NativePreConstruct() override;
 	
-private:
+public:
+	void SetText_Label(const FText& Text, bool bCollapse) const;
+	void SetText_Value(const FText& Text, bool bCollapse) const;
 
+private:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UTextBlock> Text_Label;
 
