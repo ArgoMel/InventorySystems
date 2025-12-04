@@ -8,22 +8,25 @@
 #include "Inv_EquippedGridSlot.generated.h"
 
 class UInv_EquippedSlottedItem;
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FEquippedGridSlotClicked, UInv_EquippedGridSlot*, GridSlot, const FGameplayTag&, EquipmentTypeTag);
-
 class UImage;
 class UOverlay;
-UCLASS()
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FEquippedGridSlotClicked, UInv_EquippedGridSlot*, GridSlot, const FGameplayTag&, EquipmentTypeTag);
+
+UCLASS(Abstract)
 class INVENTORY_API UInv_EquippedGridSlot : public UInv_GridSlot
 {
 	GENERATED_BODY()
-public:
+protected:
 	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-
+	
+public:
 	UInv_EquippedSlottedItem* OnItemEquipped(UInv_InventoryItem* Item, const FGameplayTag& EquipmentTag, float TileSize);
 	void SetEquippedSlottedItem(UInv_EquippedSlottedItem* Item) { EquippedSlottedItem = Item; }
-
+	
+public:
 	FEquippedGridSlotClicked EquippedGridSlotClicked;
 
 private:

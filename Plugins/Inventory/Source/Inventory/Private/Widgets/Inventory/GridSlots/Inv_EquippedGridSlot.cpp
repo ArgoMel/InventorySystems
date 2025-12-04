@@ -1,6 +1,5 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Widgets/Inventory/GridSlots/Inv_EquippedGridSlot.h"
 
 #include "Blueprint/WidgetLayoutLibrary.h"
@@ -16,10 +15,15 @@
 
 void UInv_EquippedGridSlot::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	if (!IsAvailable()) return;
-	UInv_HoverItem* HoverItem = UInv_InventoryStatics::GetHoverItem(GetOwningPlayer());
-	if (!IsValid(HoverItem)) return;
-
+	if (!IsAvailable())
+	{
+		return;
+	}
+	const UInv_HoverItem* HoverItem = UInv_InventoryStatics::GetHoverItem(GetOwningPlayer());
+	if (!IsValid(HoverItem))
+	{
+		return;
+	}
 	if (HoverItem->GetItemType().MatchesTag(EquipmentTypeTag))
 	{
 		SetOccupiedTexture();
@@ -29,12 +33,19 @@ void UInv_EquippedGridSlot::NativeOnMouseEnter(const FGeometry& InGeometry, cons
 
 void UInv_EquippedGridSlot::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
-	if (!IsAvailable()) return;
-	UInv_HoverItem* HoverItem = UInv_InventoryStatics::GetHoverItem(GetOwningPlayer());
-	if (!IsValid(HoverItem)) return;
-
-	if (IsValid(EquippedSlottedItem)) return;
-
+	if (!IsAvailable())
+	{
+		return;
+	}
+	const UInv_HoverItem* HoverItem = UInv_InventoryStatics::GetHoverItem(GetOwningPlayer());
+	if (!IsValid(HoverItem))
+	{
+		return;
+	}
+	if (IsValid(EquippedSlottedItem))
+	{
+		return;
+	}
 	if (HoverItem->GetItemType().MatchesTag(EquipmentTypeTag))
 	{
 		SetUnoccupiedTexture();
@@ -51,11 +62,16 @@ FReply UInv_EquippedGridSlot::NativeOnMouseButtonDown(const FGeometry& InGeometr
 UInv_EquippedSlottedItem* UInv_EquippedGridSlot::OnItemEquipped(UInv_InventoryItem* Item, const FGameplayTag& EquipmentTag, float TileSize)
 {
 	// Check the Equipment Type Tag
-	if (!EquipmentTag.MatchesTagExact(EquipmentTypeTag)) return nullptr;
-	
+	if (!EquipmentTag.MatchesTagExact(EquipmentTypeTag))
+	{
+		return nullptr;
+	}
 	// Get Grid Dimensions
 	const FInv_GridFragment* GridFragment = GetFragment<FInv_GridFragment>(Item, FragmentTags::GridFragment);
-	if (!GridFragment) return nullptr;
+	if (!GridFragment)
+	{
+		return nullptr;
+	}
 	const FIntPoint GridDimensions = GridFragment->GetGridSize();
 
 	// Calculate the Draw Size for the Equipped Slotted Item
@@ -79,8 +95,10 @@ UInv_EquippedSlottedItem* UInv_EquippedGridSlot::OnItemEquipped(UInv_InventoryIt
 	
 	// Set the Image Brush on the Equipped Slotted Item
 	const FInv_ImageFragment* ImageFragment = GetFragment<FInv_ImageFragment>(Item, FragmentTags::IconFragment);
-	if (!ImageFragment) return nullptr;
-
+	if (!ImageFragment)
+	{
+		return nullptr;
+	}
 	FSlateBrush Brush;
 	Brush.SetResourceObject(ImageFragment->GetIcon());
 	Brush.DrawAs = ESlateBrushDrawType::Image;
@@ -90,9 +108,9 @@ UInv_EquippedSlottedItem* UInv_EquippedGridSlot::OnItemEquipped(UInv_InventoryIt
 	
 	// Add the Slotted Item as a child to this widget's Overlay
 	Overlay_Root->AddChildToOverlay(EquippedSlottedItem);
-	FGeometry OverlayGeometry = Overlay_Root->GetCachedGeometry();
+	const FGeometry OverlayGeometry = Overlay_Root->GetCachedGeometry();
 	auto OverlayPos = OverlayGeometry.Position;
-	auto OverlaySize = OverlayGeometry.Size;
+	const auto OverlaySize = OverlayGeometry.Size;
 
 	const float LeftPadding = OverlaySize.X / 2.f - DrawSize.X / 2.f;
 	const float TopPadding = OverlaySize.Y / 2.f - DrawSize.Y / 2.f;
