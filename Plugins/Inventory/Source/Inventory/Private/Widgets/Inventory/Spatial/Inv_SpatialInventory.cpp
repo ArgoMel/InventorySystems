@@ -175,7 +175,8 @@ void UInv_SpatialInventory::EquippedSlottedItemClicked(UInv_EquippedSlottedItem*
 	// Remove the Item Description
 	UInv_InventoryStatics::ItemUnhovered(GetOwningPlayer());
 
-	if (IsValid(GetHoverItem()) && GetHoverItem()->IsStackable())
+	if (IsValid(GetHoverItem()) 
+		&& GetHoverItem()->IsStackable())
 	{
 		return;
 	}
@@ -252,11 +253,14 @@ bool UInv_SpatialInventory::CanEquipHoverItem(UInv_EquippedGridSlot* EquippedGri
 		return false;
 	}
 	const UInv_HoverItem* HoverItem = GetHoverItem();
-	if (!IsValid(HoverItem)) return false;
-
+	if (!IsValid(HoverItem))
+	{
+		return false;
+	}
 	const UInv_InventoryItem* HeldItem = HoverItem->GetInventoryItem();
 
-	return HasHoverItem() && IsValid(HeldItem) 
+	return HasHoverItem() 
+	&& IsValid(HeldItem) 
 	&& !HoverItem->IsStackable() 
 	&& HeldItem->GetItemManifest().GetItemCategory() == EInv_ItemCategory::Equippable 
 	&& HeldItem->GetItemManifest().GetItemType().MatchesTag(EquipmentTypeTag);
@@ -303,8 +307,10 @@ void UInv_SpatialInventory::MakeEquippedSlottedItem(UInv_EquippedSlottedItem* Eq
 		ItemToEquip,
 		EquippedSlottedItem->GetEquipmentTypeTag(),
 		UInv_InventoryStatics::GetInventoryWidget(GetOwningPlayer())->GetTileSize());
-	if (IsValid(SlottedItem)) SlottedItem->OnEquippedSlottedItemClicked.AddDynamic(this, &ThisClass::EquippedSlottedItemClicked);
-
+	if (IsValid(SlottedItem)) 
+	{
+		SlottedItem->OnEquippedSlottedItemClicked.AddDynamic(this, &ThisClass::EquippedSlottedItemClicked);
+	}
 	EquippedGridSlot->SetEquippedSlottedItem(SlottedItem);
 }
 

@@ -245,10 +245,11 @@ public:
 	FGameplayTag GetEquipmentType() const { return EquipmentType; }
 	void SetEquippedActor(AInv_EquipActor* EquipActor);
 	
+public:
 	bool bEquipped{false};
 	
 private:
-	UPROPERTY(EditAnywhere, Category = "Inventory")
+	UPROPERTY(EditAnywhere, Category = "Inventory", meta = (ExcludeBaseStruct))
 	TArray<TInstancedStruct<FInv_EquipModifier>> EquipModifiers;
 
 	UPROPERTY(EditAnywhere, Category = "Inventory")

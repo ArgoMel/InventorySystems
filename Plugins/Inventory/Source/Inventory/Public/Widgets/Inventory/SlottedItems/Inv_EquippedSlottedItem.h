@@ -10,19 +10,21 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEquippedSlottedItemClicked, class UInv_EquippedSlottedItem*, SlottedItem);
 
-UCLASS()
+UCLASS(Abstract)
 class INVENTORY_API UInv_EquippedSlottedItem : public UInv_SlottedItem
 {
 	GENERATED_BODY()
-public:
+protected:
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	
+public:
 	void SetEquipmentTypeTag(const FGameplayTag& Tag) { EquipmentTypeTag = Tag; }
 	FGameplayTag GetEquipmentTypeTag() const { return EquipmentTypeTag; }
-
+	
+public:
 	FEquippedSlottedItemClicked OnEquippedSlottedItemClicked;
+	
 private:
-
 	UPROPERTY()
 	FGameplayTag EquipmentTypeTag;
 };
