@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Types/Inv_GridTypes.h"
 #include "Widgets/Utils/Inv_WidgetUtils.h"

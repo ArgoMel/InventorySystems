@@ -1,6 +1,5 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Widgets/CharacterDisplay/Inv_CharacterDisplay.h"
 
 #include "Blueprint/WidgetLayoutLibrary.h"
@@ -31,28 +30,36 @@ void UInv_CharacterDisplay::NativeOnMouseLeave(const FPointerEvent& InMouseEvent
 void UInv_CharacterDisplay::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+	
+	AActor* actor=UGameplayStatics::GetActorOfClass(this, AInv_ProxyMesh::StaticClass());
 
-	TArray<AActor*> Actors;
-	UGameplayStatics::GetAllActorsOfClass(this, AInv_ProxyMesh::StaticClass(), Actors);
-
-	if (!Actors.IsValidIndex(0)) return;
-
-	AInv_ProxyMesh* ProxyMesh = Cast<AInv_ProxyMesh>(Actors[0]);
-	if (!IsValid(ProxyMesh)) return;
-
+	if (!IsValid(actor))
+	{
+		return;
+	}
+	const AInv_ProxyMesh* ProxyMesh = Cast<AInv_ProxyMesh>(actor);
+	if (!IsValid(ProxyMesh))
+	{
+		return;
+	}
 	Mesh = ProxyMesh->GetMesh();
 }
 
 void UInv_CharacterDisplay::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
-	if (!bIsDragging) return;
-
+	if (!bIsDragging)
+	{
+		return;
+	}
 	LastPosition = CurrentPosition;
 	CurrentPosition = UWidgetLayoutLibrary::GetMousePositionOnViewport(GetOwningPlayer());
 
 	const float HorizontalDelta = LastPosition.X - CurrentPosition.X;
 
-	if (!Mesh.IsValid()) return;
+	if (!Mesh.IsValid())
+	{
+		return;
+	}
 	Mesh->AddRelativeRotation(FRotator(0.f, HorizontalDelta, 0.f));
 }

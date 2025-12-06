@@ -3,22 +3,23 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
 #include "GameplayTagContainer.h"
+#include "Animation/SkeletalMeshActor.h"
 #include "Inv_EquipActor.generated.h"
 
 UCLASS()
-class INVENTORY_API AInv_EquipActor : public AActor
+class INVENTORY_API AInv_EquipActor : public ASkeletalMeshActor
 {
 	GENERATED_BODY()
-
 public:
 	AInv_EquipActor();
+	
 	FGameplayTag GetEquipmentType() const { return EquipmentType; }
 	void SetEquipmentType(FGameplayTag Type) { EquipmentType = Type; }
+	
+	void SetEquipMesh(USkeletalMesh* NewMesh);
 
 private:
-
 	UPROPERTY(EditAnywhere, Category = "Inventory")
 	FGameplayTag EquipmentType;
 };

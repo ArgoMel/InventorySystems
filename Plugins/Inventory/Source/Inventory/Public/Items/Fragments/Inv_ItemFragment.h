@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "EquipmentManagement/EquipActor/Inv_EquipActor.h"
 #include "StructUtils/InstancedStruct.h"
 
 #include "Inv_ItemFragment.generated.h"
@@ -240,7 +241,7 @@ public:
 	void OnEquip(APlayerController* PC);
 	void OnUnequip(APlayerController* PC);
 	
-	AInv_EquipActor* SpawnAttachedActor(USkeletalMeshComponent* AttachMesh) const;
+	AInv_EquipActor* SpawnAttachedActor(USkeletalMesh* NewMesh,USkeletalMeshComponent* AttachMesh) const;
 	void DestroyAttachedActor() const;
 	FGameplayTag GetEquipmentType() const { return EquipmentType; }
 	void SetEquippedActor(AInv_EquipActor* EquipActor);
@@ -253,13 +254,13 @@ private:
 	TArray<TInstancedStruct<FInv_EquipModifier>> EquipModifiers;
 
 	UPROPERTY(EditAnywhere, Category = "Inventory")
-	TSubclassOf<AInv_EquipActor> EquipActorClass = nullptr;
+	TSubclassOf<AInv_EquipActor> EquipActorClass = AInv_EquipActor::StaticClass();
 
 	TWeakObjectPtr<AInv_EquipActor> EquippedActor = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Inventory")
 	FName SocketAttachPoint{NAME_None};
 
-	UPROPERTY(EditAnywhere, Category = "Inventory")
+	UPROPERTY(EditAnywhere, Category = "Inventory", meta = (Categories="GameItems.Equipment"))
 	FGameplayTag EquipmentType = FGameplayTag::EmptyTag;
 };

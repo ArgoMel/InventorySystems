@@ -19,22 +19,15 @@ UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Blueprintable)
 class INVENTORY_API UInv_EquipmentComponent : public UActorComponent
 {
 	GENERATED_BODY()
-
+protected:
+	virtual void BeginPlay() override;
+	
 public:
-
 	void SetOwningSkeletalMesh(USkeletalMeshComponent* OwningMesh);
 	void SetIsProxy(bool bProxy) { bIsProxy = bProxy; }
 	void InitializeOwner(APlayerController* PlayerController);
-protected:
-
-	virtual void BeginPlay() override;
-
+	
 private:
-
-	TWeakObjectPtr<UInv_InventoryComponent> InventoryComponent;
-	TWeakObjectPtr<APlayerController> OwningPlayerController;
-	TWeakObjectPtr<USkeletalMeshComponent> OwningSkeletalMesh;
-
 	UFUNCTION()
 	void OnItemEquipped(UInv_InventoryItem* EquippedItem);
 
@@ -43,16 +36,21 @@ private:
 
 	void InitPlayerController();
 	void InitInventoryComponent();
-	AInv_EquipActor* SpawnEquippedActor(FInv_EquipmentFragment* EquipmentFragment, const FInv_ItemManifest& Manifest, USkeletalMeshComponent* AttachMesh);
-
-	UPROPERTY()
-	TArray<TObjectPtr<AInv_EquipActor>> EquippedActors;
-
+	AInv_EquipActor* SpawnEquippedActor(FInv_EquipmentFragment* EquipmentFragment, const FInv_ItemManifest& Manifest, USkeletalMeshComponent* AttachMesh) const;
+	
 	AInv_EquipActor* FindEquippedActor(const FGameplayTag& EquipmentTypeTag);
 	void RemoveEquippedActor(const FGameplayTag& EquipmentTypeTag);
 
 	UFUNCTION()
 	void OnPossessedPawnChange(APawn* OldPawn, APawn* NewPawn);
-
+	
+private:
+	TWeakObjectPtr<UInv_InventoryComponent> InventoryComponent;
+	TWeakObjectPtr<APlayerController> OwningPlayerController;
+	TWeakObjectPtr<USkeletalMeshComponent> OwningSkeletalMesh;
+	
+	UPROPERTY()
+	TArray<TObjectPtr<AInv_EquipActor>> EquippedActors;
+	
 	bool bIsProxy{false};
 };

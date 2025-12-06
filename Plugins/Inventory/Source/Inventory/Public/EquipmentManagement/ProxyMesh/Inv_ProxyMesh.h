@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Rendering/RenderCommandPipes.h"
 #include "Inv_ProxyMesh.generated.h"
 
 class UInv_EquipmentComponent;
@@ -13,16 +12,20 @@ UCLASS()
 class INVENTORY_API AInv_ProxyMesh : public AActor
 {
 	GENERATED_BODY()
-
 public:
 	AInv_ProxyMesh();
-	USkeletalMeshComponent* GetMesh() const { return Mesh; }
-
+	
 protected:
 	virtual void BeginPlay() override;
+	
+public:
+	USkeletalMeshComponent* GetMesh() const { return Mesh; }
 
 private:
-
+	void DelayedInitializeOwner();
+	void DelayedInitialization();
+	
+private:
 	// This is the mesh on the player-controlled Character.
 	TWeakObjectPtr<USkeletalMeshComponent> SourceMesh;
 
@@ -34,6 +37,4 @@ private:
 	TObjectPtr<USkeletalMeshComponent> Mesh;
 
 	FTimerHandle TimerForNextTick;
-	void DelayedInitializeOwner();
-	void DelayedInitialization();
 };

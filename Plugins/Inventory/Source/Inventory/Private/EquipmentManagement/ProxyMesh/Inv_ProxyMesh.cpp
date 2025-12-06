@@ -1,11 +1,9 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "EquipmentManagement/ProxyMesh/Inv_ProxyMesh.h"
 
 #include "EquipmentManagement/Components/Inv_EquipmentComponent.h"
 #include "GameFramework/Character.h"
-
 
 AInv_ProxyMesh::AInv_ProxyMesh()
 {
@@ -30,7 +28,7 @@ void AInv_ProxyMesh::BeginPlay()
 
 void AInv_ProxyMesh::DelayedInitializeOwner()
 {
-	UWorld* World = GetWorld();
+	const UWorld* World = GetWorld();
 	if (!IsValid(World))
 	{
 		DelayedInitialization();
@@ -44,7 +42,7 @@ void AInv_ProxyMesh::DelayedInitializeOwner()
 		return;
 	}
 
-	ACharacter* Character = Cast<ACharacter>(PC->GetPawn());
+	const ACharacter* Character = Cast<ACharacter>(PC->GetPawn());
 	if (!IsValid(Character))
 	{
 		DelayedInitialization();

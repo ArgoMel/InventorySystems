@@ -7,7 +7,6 @@
 #include "Components/WidgetSwitcher.h"
 #include "InventoryManagement/Utils/Inv_InventoryStatics.h"
 #include "Widgets/Inventory/Spatial/Inv_InventoryGrid.h"
-#include "Inventory.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
@@ -336,7 +335,7 @@ void UInv_SpatialInventory::ShowEquippedItemDescription(UInv_InventoryItem* Item
 		return GridSlot->GetInventoryItem() == Item;
 	});
 	// The hovered item is already equipped, we're already showing its Item Description
-	if (EquippedGridSlot != nullptr)
+	if (EquippedGridSlot)
 	{
 		return; 
 	}
@@ -358,12 +357,10 @@ void UInv_SpatialInventory::ShowEquippedItemDescription(UInv_InventoryItem* Item
 		return;
 	}
 	const auto& EquippedItemManifest = EquippedItem->GetItemManifest();
-	UInv_ItemDescription* DescriptionWidget = GetEquippedItemDescription();
-
-	const auto EquippedDescriptionWidget = GetEquippedItemDescription();
+	UInv_ItemDescription* EquippedDescriptionWidget = GetEquippedItemDescription();
 	
 	EquippedDescriptionWidget->Collapse();
-	DescriptionWidget->SetVisibility(ESlateVisibility::HitTestInvisible);	
+	EquippedDescriptionWidget->SetVisibility(ESlateVisibility::HitTestInvisible);	
 	EquippedItemManifest.AssimilateInventoryFragments(EquippedDescriptionWidget);
 }
 

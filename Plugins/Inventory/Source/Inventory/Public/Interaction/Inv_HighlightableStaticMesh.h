@@ -8,7 +8,8 @@
 #include "Inv_HighlightableStaticMesh.generated.h"
 
 UCLASS()
-class INVENTORY_API UInv_HighlightableStaticMesh : public UStaticMeshComponent, public IInv_Highlightable
+class INVENTORY_API UInv_HighlightableStaticMesh : public UStaticMeshComponent
+	, public IInv_Highlightable
 {
 	GENERATED_BODY()
 public:

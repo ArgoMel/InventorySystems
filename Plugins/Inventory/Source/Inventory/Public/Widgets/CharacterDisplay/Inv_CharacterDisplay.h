@@ -6,14 +6,11 @@
 #include "Blueprint/UserWidget.h"
 #include "Inv_CharacterDisplay.generated.h"
 
-/**
- * 
- */
-UCLASS()
+UCLASS(Abstract)
 class INVENTORY_API UInv_CharacterDisplay : public UUserWidget
 {
 	GENERATED_BODY()
-public:
+protected:
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
 	virtual FReply NativeOnMouseButtonUp(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
@@ -21,7 +18,6 @@ public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 private:
-
 	bool bIsDragging{false};
 	TWeakObjectPtr<USkeletalMeshComponent> Mesh;
 
