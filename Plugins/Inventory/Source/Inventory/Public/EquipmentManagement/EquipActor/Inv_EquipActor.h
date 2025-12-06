@@ -17,7 +17,7 @@ public:
 	FGameplayTag GetEquipmentType() const { return EquipmentType; }
 	void SetEquipmentType(FGameplayTag Type) { EquipmentType = Type; }
 	
-	void SetEquipMesh(USkeletalMesh* NewMesh);
+	void SetEquipMesh(USkeletalMesh* NewMesh,UMaterialInterface* InMat) const;
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Inventory")

@@ -7,6 +7,7 @@
 #include "Inv_EquipmentComponent.generated.h"
 
 struct FGameplayTag;
+struct FItemMeshInfo;
 struct FInv_ItemManifest;
 struct FInv_EquipmentFragment;
 class AInv_EquipActor;

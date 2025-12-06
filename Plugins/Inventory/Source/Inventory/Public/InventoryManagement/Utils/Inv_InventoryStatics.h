@@ -9,6 +9,8 @@
 #include "Widgets/Utils/Inv_WidgetUtils.h"
 #include "Inv_InventoryStatics.generated.h"
 
+class UItemMeshData;
+struct FItemMeshInfo;
 class UInv_InventoryComponent;
 class UInv_ItemComponent;
 class UInv_InventoryItem;
@@ -20,6 +22,8 @@ class INVENTORY_API UInv_InventoryStatics : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 public:
+	UInv_InventoryStatics();
+	
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	static UInv_InventoryComponent* GetInventoryComponent(const APlayerController* PlayerController);
 
@@ -39,6 +43,12 @@ public:
 	static UInv_HoverItem* GetHoverItem(APlayerController* PC);
 	
 	static UInv_InventoryBase* GetInventoryWidget(APlayerController* PC);
+	
+	UFUNCTION(BlueprintPure, Category = "Inventory")
+	static FItemMeshInfo GetItemMeshByTag(FGameplayTag Tag);
+	
+protected:
+	static TObjectPtr<UItemMeshData> ItemMeshData;
 };
 
 template<typename T, typename FuncT>

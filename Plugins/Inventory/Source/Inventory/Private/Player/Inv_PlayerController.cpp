@@ -98,9 +98,32 @@ void AInv_PlayerController::CreateHUDWidget()
 
 void AInv_PlayerController::TraceForItem()
 {
-	if (!IsValid(GEngine)
+	if (!InventoryComponent.IsValid()
+		||!IsValid(GEngine)
 		|| !IsValid(GEngine->GameViewport))
 	{
+		return;
+	}
+	if (InventoryComponent->IsMenuOpen())
+	{
+		if (LastActor.IsValid())
+		{
+			UActorComponent* Highlightable = LastActor->FindComponentByInterface(UInv_Highlightable::StaticClass());
+			if (IsValid(Highlightable))
+			{
+				IInv_Highlightable::Execute_UnHighlight(Highlightable);
+			}
+		}
+		if (ThisActor.IsValid())
+		{
+			UActorComponent* Highlightable = ThisActor->FindComponentByInterface(UInv_Highlightable::StaticClass());
+			if (IsValid(Highlightable))
+			{
+				IInv_Highlightable::Execute_UnHighlight(Highlightable);
+			}
+		}
+		LastActor.Reset();
+		ThisActor.Reset();
 		return;
 	}
 	FVector2D ViewportSize;

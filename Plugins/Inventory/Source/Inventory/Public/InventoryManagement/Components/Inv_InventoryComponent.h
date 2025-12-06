@@ -69,7 +69,7 @@ public:
 	FItemEquipStatusChanged OnItemEquipped;
 	FItemEquipStatusChanged OnItemUnequipped;
 	FInventoryMenuToggled OnInventoryMenuToggled;
-
+	
 private:
 	TWeakObjectPtr<APlayerController> OwningController;
 	

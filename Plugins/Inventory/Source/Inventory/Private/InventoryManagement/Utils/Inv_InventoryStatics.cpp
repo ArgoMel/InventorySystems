@@ -2,10 +2,22 @@
 
 #include "InventoryManagement/Utils/Inv_InventoryStatics.h"
 
+#include "Data/ItemMeshData.h"
 #include "InventoryManagement/Components/Inv_InventoryComponent.h"
 #include "Items/Components/Inv_ItemComponent.h"
 #include "Types/Inv_GridTypes.h"
 #include "Widgets/Inventory/InventoryBase/Inv_InventoryBase.h"
+
+TObjectPtr<UItemMeshData> UInv_InventoryStatics::ItemMeshData;
+
+UInv_InventoryStatics::UInv_InventoryStatics()
+{
+	static ConstructorHelpers::FObjectFinder<UItemMeshData> __ItemMeshData(TEXT("/Inventory/Data/DA_ItemMeshInfo.DA_ItemMeshInfo"));
+	if (__ItemMeshData.Succeeded()) 
+	{
+		ItemMeshData = __ItemMeshData.Object;
+	}
+}
 
 UInv_InventoryComponent* UInv_InventoryStatics::GetInventoryComponent(const APlayerController* PlayerController)
 {
@@ -83,4 +95,10 @@ UInv_InventoryBase* UInv_InventoryStatics::GetInventoryWidget(APlayerController*
 		return nullptr;
 	}
 	return IC->GetInventoryMenu();
+}
+
+FItemMeshInfo UInv_InventoryStatics::GetItemMeshByTag(FGameplayTag Tag)
+{
+	check(ItemMeshData);
+	return ItemMeshData->FindItemMeshInfoForTag(Tag);
 }

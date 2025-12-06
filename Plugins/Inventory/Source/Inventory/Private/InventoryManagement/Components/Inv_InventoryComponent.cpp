@@ -2,6 +2,7 @@
 
 #include "InventoryManagement/Components/Inv_InventoryComponent.h"
 
+#include "Data/ItemMeshData.h"
 #include "Items/Components/Inv_ItemComponent.h"
 #include "Widgets/Inventory/InventoryBase/Inv_InventoryBase.h"
 #include "Net/UnrealNetwork.h"

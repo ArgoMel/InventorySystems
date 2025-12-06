@@ -27,10 +27,11 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Inventory")
 	void OnPickedUp();
 
-private:
+protected:
 	UPROPERTY(Replicated, EditAnywhere, Category = "Inventory")
 	FInv_ItemManifest ItemManifest;
-
+	
+private:
 	UPROPERTY(EditAnywhere, Category = "Inventory")
 	FString PickupMessage;
 };

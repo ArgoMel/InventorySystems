@@ -7,6 +7,7 @@
 
 #include "Inv_ItemManifest.generated.h"
 
+class AInv_ItemActor;
 class UInv_InventoryItem;
 struct FInv_ItemFragment;
 class UInv_CompositeBase;
@@ -54,9 +55,29 @@ private:
 	FGameplayTag ItemType;
 
 	UPROPERTY(EditAnywhere, Category = "Inventory")
-	TSubclassOf<AActor> PickupActorClass;
+	TSubclassOf<AInv_ItemActor> PickupActorClass;
 };
 
+USTRUCT(BlueprintType)
+struct FItemMeshInfo
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	USkeletalMesh* SkeletalMesh=nullptr;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UStaticMesh* StaticMesh = nullptr;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UMaterialInterface* Material = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FInv_ItemManifest ItemManifest;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FVector Scale=FVector::OneVector;
+};
 
 template<typename T>
 requires std::derived_from<T, FInv_ItemFragment>

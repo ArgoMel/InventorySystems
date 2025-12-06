@@ -6,9 +6,15 @@ AInv_EquipActor::AInv_EquipActor()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	bReplicates = true;
+	
+	GetSkeletalMeshComponent()->SetCollisionProfileName(TEXT("NoCollision"));
 }
 
-void AInv_EquipActor::SetEquipMesh(USkeletalMesh* NewMesh)
+void AInv_EquipActor::SetEquipMesh(USkeletalMesh* NewMesh,UMaterialInterface* InMat) const
 {
 	GetSkeletalMeshComponent()->SetSkeletalMesh(NewMesh);
+	if (IsValid(InMat))
+	{
+		GetSkeletalMeshComponent()->SetMaterial(0,InMat);
+	}
 }

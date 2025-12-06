@@ -2,6 +2,7 @@
 #include "Items/Manifest/Inv_ItemManifest.h"
 
 #include "Items/Inv_InventoryItem.h"
+#include "Items/Inv_ItemActor.h"
 #include "Items/Components/Inv_ItemComponent.h"
 #include "Items/Fragments/Inv_ItemFragment.h"
 #include "Widgets/Composite/Inv_CompositeBase.h"
@@ -38,16 +39,16 @@ void FInv_ItemManifest::SpawnPickupActor(const UObject* WorldContextObject, cons
 	{
 		return;
 	}
-	const AActor* SpawnedActor = WorldContextObject->GetWorld()->SpawnActor<AActor>(PickupActorClass, SpawnLocation, SpawnRotation);
+	FTransform pickupActorTransform;
+	pickupActorTransform.SetLocation(SpawnLocation);
+	pickupActorTransform.SetRotation(SpawnRotation.Quaternion());
+	AInv_ItemActor* SpawnedActor = WorldContextObject->GetWorld()->SpawnActorDeferred<AInv_ItemActor>(PickupActorClass, pickupActorTransform);
 	if (!IsValid(SpawnedActor))
 	{
 		return;
 	}
-	// Set the item manifest, item category, item type, etc.
-	UInv_ItemComponent* ItemComp = SpawnedActor->FindComponentByClass<UInv_ItemComponent>();
-	check(ItemComp);
-
-	ItemComp->InitItemManifest(*this);
+	SpawnedActor->SetItemTag(ItemType);
+	SpawnedActor->FinishSpawning(pickupActorTransform);
 }
 
 void FInv_ItemManifest::ClearFragments()

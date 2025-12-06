@@ -241,7 +241,7 @@ public:
 	void OnEquip(APlayerController* PC);
 	void OnUnequip(APlayerController* PC);
 	
-	AInv_EquipActor* SpawnAttachedActor(USkeletalMesh* NewMesh,USkeletalMeshComponent* AttachMesh) const;
+	AInv_EquipActor* SpawnAttachedActor(USkeletalMesh* NewMesh,UMaterialInterface* InMat,USkeletalMeshComponent* AttachMesh) const;
 	void DestroyAttachedActor() const;
 	FGameplayTag GetEquipmentType() const { return EquipmentType; }
 	void SetEquippedActor(AInv_EquipActor* EquipActor);
