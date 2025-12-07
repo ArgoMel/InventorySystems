@@ -79,7 +79,7 @@ AInv_EquipActor* UInv_EquipmentComponent::SpawnEquippedActor(FInv_EquipmentFragm
 {
 	const FItemMeshInfo meshInfo=UInv_InventoryStatics::GetItemMeshByTag(Manifest.GetItemType());
 	
-	AInv_EquipActor* SpawnedEquipActor = EquipmentFragment->SpawnAttachedActor(meshInfo.SkeletalMesh,meshInfo.Material,AttachMesh);
+	AInv_EquipActor* SpawnedEquipActor = EquipmentFragment->SpawnAttachedActor(AttachMesh,Manifest.GetItemType());
 	SpawnedEquipActor->SetEquipmentType(EquipmentFragment->GetEquipmentType());
 	SpawnedEquipActor->SetOwner(GetOwner());
 	EquipmentFragment->SetEquippedActor(SpawnedEquipActor);

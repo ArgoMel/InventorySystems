@@ -23,7 +23,8 @@ AInv_ItemActor::AInv_ItemActor()
 void AInv_ItemActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	DOREPLIFETIME(ThisClass, ItemTag);
+	//DOREPLIFETIME(ThisClass, ItemTag);
+	DOREPLIFETIME_CONDITION(ThisClass, ItemTag,COND_InitialOnly);
 }
 
 void AInv_ItemActor::OnConstruction(const FTransform& Transform)

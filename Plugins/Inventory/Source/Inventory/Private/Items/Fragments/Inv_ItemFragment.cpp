@@ -262,7 +262,7 @@ void FInv_EquipmentFragment::OnUnequip(APlayerController* PC)
 	}
 }
 
-AInv_EquipActor* FInv_EquipmentFragment::SpawnAttachedActor(USkeletalMesh* NewMesh, UMaterialInterface* InMat,USkeletalMeshComponent* AttachMesh) const
+AInv_EquipActor* FInv_EquipmentFragment::SpawnAttachedActor(USkeletalMeshComponent* AttachMesh, FGameplayTag InItemTag) const
 {
 	if (!IsValid(EquipActorClass) 
 		|| !IsValid(AttachMesh))
@@ -270,7 +270,7 @@ AInv_EquipActor* FInv_EquipmentFragment::SpawnAttachedActor(USkeletalMesh* NewMe
 		return nullptr;
 	}
 	AInv_EquipActor* SpawnedActor = AttachMesh->GetWorld()->SpawnActorDeferred<AInv_EquipActor>(EquipActorClass,FTransform::Identity);
-	SpawnedActor->SetEquipMesh(NewMesh,InMat);
+	SpawnedActor->SetItemTag(InItemTag);
 	SpawnedActor->FinishSpawning(FTransform::Identity);
 	SpawnedActor->AttachToComponent(AttachMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, SocketAttachPoint);
 
