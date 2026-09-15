@@ -12,7 +12,7 @@ UCLASS()
 class INVENTORY_API UInv_InventoryItem : public UObject
 {
 	GENERATED_BODY()
-protected:
+public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual bool IsSupportedForNetworking() const override { return true; }
 	
