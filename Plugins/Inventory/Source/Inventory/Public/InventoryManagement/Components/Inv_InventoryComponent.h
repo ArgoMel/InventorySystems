@@ -23,8 +23,6 @@ class INVENTORY_API UInv_InventoryComponent : public UActorComponent
 	GENERATED_BODY()
 public:
 	UInv_InventoryComponent();
-	
-protected:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void BeginPlay() override;
 	

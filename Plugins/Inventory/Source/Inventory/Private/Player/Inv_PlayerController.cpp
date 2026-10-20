@@ -18,6 +18,13 @@ AInv_PlayerController::AInv_PlayerController()
 	ItemTraceChannel = ECC_GameTraceChannel1;
 }
 
+void AInv_PlayerController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	TraceForItem();
+}
+
 void AInv_PlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
@@ -40,13 +47,6 @@ void AInv_PlayerController::BeginPlay()
 
 	InventoryComponent = FindComponentByClass<UInv_InventoryComponent>();
 	CreateHUDWidget();
-}
-
-void AInv_PlayerController::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	TraceForItem();
 }
 
 // ReSharper disable once CppUE4BlueprintCallableFunctionMayBeConst

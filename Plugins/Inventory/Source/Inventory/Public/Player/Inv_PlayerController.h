@@ -17,11 +17,12 @@ class INVENTORY_API AInv_PlayerController : public APlayerController
 	GENERATED_BODY()
 public:
 	AInv_PlayerController();
-
+	virtual void Tick(float DeltaTime) override;
+	
 protected:
 	virtual void SetupInputComponent() override;
 	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
+
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
